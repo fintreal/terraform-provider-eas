@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+env:
+  GOPRIVATE: github.com/fintreal/*
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  GONOSUMDB: github.com/fintreal/*
+
+jobs:
+  Docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Installl tfplugindocs
+        run: go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest
+
+      - name: Git config
+        run: |
+          git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Generate docs
+        run: $HOME/go/bin/tfplugindocs
+
+      - name: "Commit and push docs"
+        run: |
+          git diff --quiet || (git add . && git commit -m "chore: auto-generate docs [skip ci]" && git push)
+
+  Version:
+    runs-on: ubuntu-latest
+    needs: [Docs]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get next version
+        id: semver
+        uses: ietf-tools/semver-action@v1.10.1
+        with:
+          token: ${{ github.token }}
+          branch: main
+
+      - name: Create release
+        uses: ncipollo/release-action@v1.16.0
+        with:
+          makeLatest: true
+          name: ${{ steps.semver.outputs.next }}
+          tag: ${{ steps.semver.outputs.next }}
+          body: Changelog Contents
+          token: ${{ github.token }}
+
+  Release:
+    runs-on: ubuntu-latest
+    needs: [Version]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        id: import_gpg
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
