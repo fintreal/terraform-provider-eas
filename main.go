@@ -7,9 +7,8 @@ import (
 	"context"
 	"flag"
 	"log"
-
+	"terraform-provider-expo-eas/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/hashicorp/terraform-provider-scaffolding-framework/internal/provider"
 )
 
 var (
@@ -31,7 +30,7 @@ func main() {
 		// TODO: Update this string with the published name of your provider.
 		// Also update the tfplugindocs generate command to either remove the
 		// -provider-name flag or set its value to the updated provider name.
-		Address: "registry.terraform.io/hashicorp/scaffolding",
+		Address: "registry.terraform.io/fintreal/expo-eas",
 		Debug:   debug,
 	}
 
