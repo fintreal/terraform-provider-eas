@@ -1,9 +1,18 @@
 terraform {
     required_providers {
-      aes = {
+      eas = {
         source = "registry.terraform.io/fintreal/expo-eas"
       }
-    }    
+    }
 }
 
-provider aes { asd = "" }
+
+data "eas_project_variable" "this" {
+  name = "ID3"
+  project_name = "TestProject2"
+  environment = "development"
+}
+
+output "this" {
+  value = data.eas_project_variable.this
+}

@@ -9,16 +9,16 @@ import (
 
 
 type ProjectInfo struct {
-	id    string `json:"id"`
-    name  string `json:"name"`
-	owner string `json:"owner"`
+	Id    string `json:"id"`
+    Name  string `json:"name"`
+	Owner string `json:"owner"`
 }
 
 type ProjectVariableProps struct {
-    name        string `json:"name"`
-    value       string `json:"value"`
-    visibility  string `json:"visibility"`
-    environment string `json:"environment"`
+    Name        string `json:"name"`
+    Value       string `json:"value"`
+    Visibility  string `json:"visibility"`
+    Environment string `json:"environment"`
 }
 
 func parseVariable(input string) (*ProjectVariableProps, error) {
@@ -39,18 +39,18 @@ func parseVariable(input string) (*ProjectVariableProps, error) {
 		// Map extracted values to the struct fields
 		switch key {
 		case "Name":
-			props.name = value
+			props.Name = value
 		case "Value":
-			props.value = value
+			props.Value = value
 		case "Visibility":
 			lowerVisibility := strings.ToLower(value)
 			if lowerVisibility == "public" {
-				props.visibility = "plaintext"
+				props.Visibility = "plaintext"
 			} else {
-				props.visibility = lowerVisibility
+				props.Visibility = lowerVisibility
 			}
 		case "Environments":
-			props.environment = strings.ToLower(value)
+			props.Environment = strings.ToLower(value)
 		}
 	}
 
@@ -67,9 +67,9 @@ func parseProjectInfo(input string) (*ProjectInfo, error) {
     }
 
     return &ProjectInfo{
-    	owner: matches[1],
-    	name:  matches[2],
-    	id:    matches[3],
+    	Owner: matches[1],
+    	Name:  matches[2],
+    	Id:    matches[3],
     }, nil
 }
 
@@ -84,7 +84,7 @@ func deleteContext(name string) {
     RunCommand(".", "rm", "-rf", name)
 }
 
-func createProject(name string) (*ProjectInfo, error) {
+func CreateProject(name string) (*ProjectInfo, error) {
     createContext(name)
     out, err := RunCommand(name, "eas", "project:init", "--force")
     if err != nil {
@@ -106,9 +106,9 @@ func linkProject(name string) {
     RunCommand(name, "eas", "project:init", "--force")
 }
 
-func createProjectVariable(projectName string, props ProjectVariableProps) (*ProjectVariableProps, error) {
+func CreateProjectVariable(projectName string, props ProjectVariableProps) (*ProjectVariableProps, error) {
     linkProject(projectName);
-    _, err := RunCommand(projectName, "eas", "env:create", "--scope", "project", "--non-interactive", "--name", props.name, "--value", props.value, "--visibility", props.visibility, "--environment", props.environment)
+    _, err := RunCommand(projectName, "eas", "env:create", "--scope", "project", "--non-interactive", "--name", props.Name, "--value", props.Value, "--visibility", props.Visibility, "--environment", props.Environment)
     if err != nil {
         deleteContext(projectName)
         return nil, err
@@ -117,19 +117,19 @@ func createProjectVariable(projectName string, props ProjectVariableProps) (*Pro
     return &props, err
 }
 
-func deleteProjectVariable(projectName string, variableName string, environment string) (string, error) {
+func DeleteProjectVariable(projectName string, variableName string, environment string) (string, error) {
     linkProject(projectName)
     out, err := RunCommand(projectName, "eas", "env:delete", environment, "--variable-name", variableName, "--non-interactive", "--scope", "project")
     deleteContext(projectName)
     return out, err
 }
 
-func getProjectVariable(projectName string, variableName string, environment string) (*ProjectVariableProps, error) {
+func GetProjectVariable(projectName string, variableName string, environment string) (*ProjectVariableProps, error) {
     linkProject(projectName)
     out, err := RunCommand(projectName, "eas", "env:get", environment, "--variable-name", variableName, "--non-interactive", "--format", "long", "--scope", "project")
     if err != nil {
         return nil, err
     }
-deleteContext(projectName)
+    deleteContext(projectName)
     return parseVariable(out)
 }
