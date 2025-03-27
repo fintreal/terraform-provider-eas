@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package eas
 
 import (
@@ -9,7 +12,7 @@ import (
 
 
 type ProjectInfo struct {
-	Id    string `json:"id"`
+	ID    string `json:"id"`
     Name  string `json:"name"`
 	Owner string `json:"owner"`
 }
@@ -69,7 +72,7 @@ func parseProjectInfo(input string) (*ProjectInfo, error) {
     return &ProjectInfo{
     	Owner: matches[1],
     	Name:  matches[2],
-    	Id:    matches[3],
+    	ID:    matches[3],
     }, nil
 }
 

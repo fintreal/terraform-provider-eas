@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 )
 
-// Ensure ScaffoldingProvider satisfies various provider interfaces.
 var _ provider.Provider = &EASClient{}
 var _ provider.ProviderWithFunctions = &EASClient{}
 var _ provider.ProviderWithEphemeralResources = &EASClient{}
@@ -41,26 +40,23 @@ func (p *EASClient) Configure(ctx context.Context, req provider.ConfigureRequest
 func (p *EASClient) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewProjectResource,
+		NewProjectVariableResource,
 	}
 }
 
 func (p *EASClient) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
 	return []func() ephemeral.EphemeralResource{
-		NewExampleEphemeralResource,
 	}
 }
 
 func (p *EASClient) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewProjectDataSource,
 		NewProjectVariableDataSource,
 	}
 }
 
 func (p *EASClient) Functions(ctx context.Context) []func() function.Function {
-	return []func() function.Function{
-		NewExampleFunction,
-	}
+	return []func() function.Function{ }
 }
 
 func New() func() provider.Provider {
