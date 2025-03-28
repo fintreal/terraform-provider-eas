@@ -76,11 +76,13 @@ func parseProjectInfo(input string) (*ProjectInfo, error) {
     }, nil
 }
 
-func createContext(name string) {
-    createDir(name)
-    createFile(name, "package.json", "{}")
+func createContext(name string) string {
+    folderName := RandomString()
+    createDir(folderName + "/" + name)
+    createFile(folderName + "/" + name, "package.json", "{}")
     content := fmt.Sprintf(`{ "name": "%s", "slug": "%s" }`, name, name)
-    createFile(name, "app.json", content)
+    createFile(folderName + "/" + name, "app.json", content)
+    return folderName
 }
 
 func deleteContext(name string) {
@@ -88,14 +90,14 @@ func deleteContext(name string) {
 }
 
 func CreateProject(name string) (*ProjectInfo, error) {
-    createContext(name)
-    out, err := RunCommand(name, "eas", "project:init", "--force")
+    folderName := createContext(name)
+    out, err := RunCommand(folderName + "/" + name, "eas", "project:init", "--force")
     if err != nil {
-        deleteContext(name)
+        deleteContext(folderName)
         return nil, err
     }
-    out, err = RunCommand(name, "eas", "project:info")
-    deleteContext(name)
+    out, err = RunCommand(folderName + "/" + name, "eas", "project:info")
+    deleteContext(folderName)
 
     if err !=nil {
         return nil, err
@@ -104,35 +106,36 @@ func CreateProject(name string) (*ProjectInfo, error) {
     return parseProjectInfo(out)
 }
 
-func linkProject(name string) {
-    createContext(name)
-    RunCommand(name, "eas", "project:init", "--force")
+func linkProject(name string) string {
+    folderName := createContext(name)
+    RunCommand(folderName + "/" + name, "eas", "project:init", "--force")
+    return folderName
 }
 
 func CreateProjectVariable(projectName string, props ProjectVariableProps) (*ProjectVariableProps, error) {
-    linkProject(projectName);
-    _, err := RunCommand(projectName, "eas", "env:create", "--scope", "project", "--non-interactive", "--name", props.Name, "--value", props.Value, "--visibility", props.Visibility, "--environment", props.Environment)
+    folderName := linkProject(projectName);
+    _, err := RunCommand(folderName + "/" + projectName, "eas", "env:create", "--scope", "project", "--non-interactive", "--name", props.Name, "--value", props.Value, "--visibility", props.Visibility, "--environment", props.Environment)
     if err != nil {
-        deleteContext(projectName)
+        deleteContext(folderName)
         return nil, err
     }
-    deleteContext(projectName)
+    deleteContext(folderName)
     return &props, err
 }
 
 func DeleteProjectVariable(projectName string, variableName string, environment string) (string, error) {
-    linkProject(projectName)
-    out, err := RunCommand(projectName, "eas", "env:delete", environment, "--variable-name", variableName, "--non-interactive", "--scope", "project")
-    deleteContext(projectName)
+    folderName := linkProject(projectName)
+    out, err := RunCommand(folderName + "/" + projectName, "eas", "env:delete", environment, "--variable-name", variableName, "--non-interactive", "--scope", "project")
+    deleteContext(folderName)
     return out, err
 }
 
 func GetProjectVariable(projectName string, variableName string, environment string) (*ProjectVariableProps, error) {
-    linkProject(projectName)
-    out, err := RunCommand(projectName, "eas", "env:get", environment, "--variable-name", variableName, "--non-interactive", "--format", "long", "--scope", "project")
+    folderName := linkProject(projectName)
+    out, err := RunCommand(folderName + "/" + projectName, "eas", "env:get", environment, "--variable-name", variableName, "--non-interactive", "--format", "long", "--scope", "project")
     if err != nil {
         return nil, err
     }
-    deleteContext(projectName)
+    deleteContext(folderName)
     return parseVariable(out)
 }

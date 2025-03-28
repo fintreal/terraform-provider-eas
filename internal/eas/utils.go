@@ -8,6 +8,8 @@ import (
     "os/exec"
     "bytes"
     "os"
+	"math/rand"
+	"time"
 )
 
 func RunCommand(dir string, command string, args ...string) (string, error) {
@@ -33,4 +35,15 @@ func createFile(dir string, name string, content string) {
     file, _:= os.Create(dir + "/" + name)
     file.WriteString(content)
     file.Close()
+}
+
+const letters = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+func RandomString() string {
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, 10)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
