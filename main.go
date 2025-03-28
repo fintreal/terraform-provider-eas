@@ -6,9 +6,9 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"log"
 	"terraform-provider-expo-eas/internal/provider"
-	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
 
 var (
