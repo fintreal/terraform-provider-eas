@@ -5,5 +5,5 @@ terraform {
     }
   }
 }
-// EXPO_TOKEN must exist
+
 provider "eas" {}

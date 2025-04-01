@@ -8,27 +8,27 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-var _ datasource.DataSource = &appVariableDataSource{}
+var _ datasource.DataSource = &appDataSource{}
 
-func NewAppVariableDataSource() datasource.DataSource {
-	return &appVariableDataSource{}
+func NewAppDataSource() datasource.DataSource {
+	return &appDataSource{}
 }
 
-type appVariableDataSource struct {
+type appDataSource struct {
 	client easClient
 }
 
-type appVariableDataSourceModel struct {
+type appDataSourceModel struct {
 	Id   types.String `tfsdk:"id"`
 	Name types.String `tfsdk:"name"`
 	Slug types.String `tfsdk:"slug"`
 }
 
-func (d *appVariableDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *appDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_app"
 }
 
-func (d *appVariableDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *appDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{Attributes: map[string]schema.Attribute{
 		"id": schema.StringAttribute{
 			Required: true,
@@ -42,7 +42,7 @@ func (d *appVariableDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 	}}
 }
 
-func (d *appVariableDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *appDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -52,7 +52,7 @@ func (d *appVariableDataSource) Configure(_ context.Context, req datasource.Conf
 	d.client = *client
 }
 
-func (d *appVariableDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *appDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config appDataSourceModel
 	diags := resp.State.Get(ctx, &config)
 	resp.Diagnostics.Append(diags...)
@@ -66,7 +66,7 @@ func (d *appVariableDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	state := appVariableDataSourceModel{
+	state := appDataSourceModel{
 		Id:   types.StringValue(data.Id),
 		Name: types.StringValue(data.Name),
 		Slug: types.StringValue(data.Slug),

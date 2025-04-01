@@ -16,10 +16,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-var _ provider.Provider = &easProvider{}
+var _ provider.Provider = &easClient{}
 
-type easProvider struct {
-	client    eas.EASClient
+type easClient struct {
+	eas.EASClient
 	accountId string
 }
 
@@ -28,11 +28,11 @@ type easProviderModel struct {
 	AccountName types.String `tfsdk:"account_name"`
 }
 
-func (p *easProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+func (p *easClient) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "eas"
 }
 
-func (p *easProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *easClient) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{Attributes: map[string]schema.Attribute{
 		"token": schema.StringAttribute{
 			Optional:  true,
@@ -44,7 +44,7 @@ func (p *easProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 	}}
 }
 
-func (p *easProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+func (p *easClient) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 	var config easProviderModel
 	diags := req.Config.Get(ctx, &config)
 	resp.Diagnostics.Append(diags...)
@@ -107,33 +107,34 @@ func (p *easProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		return
 	}
 
-	easClient := eas.NewEASClient(token)
-	account, err := easClient.Account.GetByName(accountName)
+	client := eas.NewEASClient(token)
+	account, err := client.Account.GetByName(accountName)
 
 	if err != nil {
 		resp.Diagnostics.AddError("Failed to create accountId for '"+accountName+"' account.", err.Error())
 		return
 	}
 
-	client := &easProvider{
-		client:    *easClient,
+	easClient := &easClient{
+		EASClient: *client,
 		accountId: account.Id,
 	}
-
-	resp.DataSourceData = client
-	resp.ResourceData = client
+	resp.DataSourceData = easClient
+	resp.ResourceData = easClient
 }
 
-func (p *easProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *easClient) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{}
 }
 
-func (p *easProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{}
+func (p *easClient) DataSources(ctx context.Context) []func() datasource.DataSource {
+	return []func() datasource.DataSource{
+		NewAppDataSource,
+	}
 }
 
 func New() func() provider.Provider {
 	return func() provider.Provider {
-		return &easProvider{}
+		return &easClient{}
 	}
 }
