@@ -130,6 +130,7 @@ func (p *easClient) Resources(ctx context.Context) []func() resource.Resource {
 func (p *easClient) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewAppDataSource,
+		NewAppVariableDataSource,
 	}
 }
 
