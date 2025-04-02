@@ -90,7 +90,7 @@ func (r *appVariableResource) Read(ctx context.Context, req resource.ReadRequest
 	}
 	state := appVariableDataSourceModel{
 		Id:           types.StringValue(data.Id),
-		AppId:        types.StringValue(data.AppId),
+		AppId:        config.AppId,
 		Name:         types.StringValue(data.Name),
 		Value:        types.StringValue(data.Value),
 		Visibility:   types.StringValue(data.Visibility),
@@ -135,7 +135,7 @@ func (r *appVariableResource) Create(ctx context.Context, req resource.CreateReq
 	}
 	state := appVariableResourceModel{
 		Id:           types.StringValue(data.Id),
-		AppId:        types.StringValue(data.AppId),
+		AppId:        plan.AppId,
 		Name:         types.StringValue(data.Name),
 		Value:        types.StringValue(data.Value),
 		Visibility:   types.StringValue(data.Visibility),

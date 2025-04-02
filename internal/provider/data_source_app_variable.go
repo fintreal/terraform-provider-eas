@@ -38,9 +38,9 @@ func (d *appVariableDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 		"app_id": schema.StringAttribute{
 			Required: true,
 		},
-		"name": schema.StringAttribute{
-			Required: true,
-		},
+		// "name": schema.StringAttribute{
+		// 	Required: true,
+		// },
 		"id": schema.StringAttribute{
 			Computed: true,
 		},
@@ -86,8 +86,8 @@ func (d *appVariableDataSource) Read(ctx context.Context, req datasource.ReadReq
 		environments = append(environments, types.StringValue(string(environment)))
 	}
 	state := appVariableDataSourceModel{
-		Id:           types.StringValue(data.Id),
-		AppId:        types.StringValue(data.AppId),
+		Id: types.StringValue(data.Id),
+		// AppId:        types.StringValue(data.AppId),
 		Name:         types.StringValue(data.Name),
 		Value:        types.StringValue(data.Value),
 		Visibility:   types.StringValue(string(data.Visibility)),
