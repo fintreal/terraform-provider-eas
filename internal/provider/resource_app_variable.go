@@ -146,6 +146,56 @@ func (r *appVariableResource) Create(ctx context.Context, req resource.CreateReq
 }
 
 func (r *appVariableResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan appVariableResourceModel
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	var currentState appVariableResourceModel
+	diags = req.State.Get(ctx, &currentState)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	var easEnvironments []string
+	for _, environment := range plan.Environments.Elements() {
+		easEnvironments = append(easEnvironments, (environment.(types.String)).ValueString())
+	}
+
+	input := eas.UpdateAppEnvVarData{
+		Id:           currentState.Id.ValueString(),
+		Name:         plan.Name.ValueString(),
+		Value:        plan.Value.ValueString(),
+		Visibility:   plan.Visibility.ValueString(),
+		Environments: easEnvironments,
+	}
+
+	data, err := r.client.AppEnvVar.Update(input)
+	if err != nil {
+		resp.Diagnostics.AddError("Error Updating 'app'", err.Error())
+		return
+	}
+
+	var environments []attr.Value
+	for _, environment := range data.Environments {
+		environments = append(environments, types.StringValue(environment))
+	}
+	newState := appVariableResourceModel{
+		Id:           types.StringValue(data.Id),
+		AppId:        plan.AppId,
+		Name:         types.StringValue(data.Name),
+		Value:        types.StringValue(data.Value),
+		Visibility:   types.StringValue(data.Visibility),
+		Environments: types.SetValueMust(types.StringType, environments),
+	}
+	diags = resp.State.Set(ctx, newState)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
 
 func (r *appVariableResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
