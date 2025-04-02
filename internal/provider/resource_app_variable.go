@@ -145,11 +145,9 @@ func (r *appVariableResource) Create(ctx context.Context, req resource.CreateReq
 	resp.Diagnostics.Append(diags...)
 }
 
-// Update updates the resource and sets the updated Terraform state on success.
 func (r *appVariableResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 }
 
-// Delete deletes the resource and removes the Terraform state on success.
 func (r *appVariableResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state appVariableResourceModel
 	diags := req.State.Get(ctx, &state)

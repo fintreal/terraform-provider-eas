@@ -20,7 +20,8 @@ var _ provider.Provider = &easClient{}
 
 type easClient struct {
 	eas.EASClient
-	accountId string
+	accountId   string
+	accountName string
 }
 
 type easProviderModel struct {
@@ -116,8 +117,9 @@ func (p *easClient) Configure(ctx context.Context, req provider.ConfigureRequest
 	}
 
 	easClient := &easClient{
-		EASClient: *client,
-		accountId: account.Id,
+		EASClient:   *client,
+		accountId:   account.Id,
+		accountName: accountName,
 	}
 	resp.DataSourceData = easClient
 	resp.ResourceData = easClient

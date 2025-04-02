@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/fintreal/expo-eas-sdk-go/eas"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -78,7 +79,6 @@ func (r *appResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	resp.Diagnostics.Append(diags...)
 }
 
-// Create creates the resource and sets the initial Terraform state.
 func (r *appResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan appResourceModel
 	diags := req.Plan.Get(ctx, &plan)
@@ -108,7 +108,6 @@ func (r *appResource) Create(ctx context.Context, req resource.CreateRequest, re
 	resp.Diagnostics.Append(diags...)
 }
 
-// Update updates the resource and sets the updated Terraform state on success.
 func (r *appResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan appResourceModel
 	diags := req.Plan.Get(ctx, &plan)
@@ -157,4 +156,14 @@ func (r *appResource) Update(ctx context.Context, req resource.UpdateRequest, re
 }
 
 func (r *appResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state appResourceModel
+	diags := req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	warningDetails := fmt.Sprintf("EAS requires elevated privilages to delete app. The app was removed from the state, but you have to delete it manually here https://expo.dev/accounts/%s/projects", r.client.accountName)
+
+	resp.Diagnostics.AddWarning("App was removed but not deleted!", warningDetails)
 }
