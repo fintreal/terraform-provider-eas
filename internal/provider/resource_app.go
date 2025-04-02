@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 
+	"github.com/fintreal/expo-eas-sdk-go/eas"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -17,6 +18,12 @@ func NewAppResource() resource.Resource {
 
 type appResource struct {
 	client *easClient
+}
+
+type appResourceModel struct {
+	Id   types.String `tfsdk:"id"`
+	Name types.String `tfsdk:"name"`
+	Slug types.String `tfsdk:"slug"`
 }
 
 func (r *appResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -36,13 +43,19 @@ func (d *appResource) Configure(_ context.Context, req resource.ConfigureRequest
 func (r *appResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{Attributes: map[string]schema.Attribute{
 		"id": schema.StringAttribute{
+			Computed: true,
+		},
+		"name": schema.StringAttribute{
+			Required: true,
+		},
+		"slug": schema.StringAttribute{
 			Required: true,
 		},
 	}}
 }
 
 func (r *appResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var config exampleDataSourceModel
+	var config appResourceModel
 	diags := resp.State.Get(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -55,8 +68,10 @@ func (r *appResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
-	state := exampleDataSourceModel{
-		Id: types.StringValue(data.Id),
+	state := appResourceModel{
+		Id:   types.StringValue(data.Id),
+		Name: types.StringValue(data.Name),
+		Slug: types.StringValue(data.Slug),
 	}
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
@@ -64,6 +79,32 @@ func (r *appResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 // Create creates the resource and sets the initial Terraform state.
 func (r *appResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan appResourceModel
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	app := eas.CreateAppData{
+		Name:      plan.Name.ValueString(),
+		Slug:      plan.Slug.ValueString(),
+		AccountId: r.client.accountId,
+	}
+
+	data, err := r.client.App.Create(app)
+
+	if err != nil {
+		resp.Diagnostics.AddError("Unable to Create'app'", err.Error())
+		return
+	}
+	state := appResourceModel{
+		Id:   types.StringValue(data.Id),
+		Name: types.StringValue(data.Name),
+		Slug: types.StringValue(data.Slug),
+	}
+	diags = resp.State.Set(ctx, state)
+	resp.Diagnostics.Append(diags...)
 }
 
 // Update updates the resource and sets the updated Terraform state on success.

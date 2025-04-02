@@ -124,7 +124,9 @@ func (p *easClient) Configure(ctx context.Context, req provider.ConfigureRequest
 }
 
 func (p *easClient) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		NewAppResource,
+	}
 }
 
 func (p *easClient) DataSources(ctx context.Context) []func() datasource.DataSource {
