@@ -151,4 +151,16 @@ func (r *appVariableResource) Update(ctx context.Context, req resource.UpdateReq
 
 // Delete deletes the resource and removes the Terraform state on success.
 func (r *appVariableResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state appVariableResourceModel
+	diags := req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	err := r.client.AppEnvVar.Delete(state.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Error Deleting 'app_variable'", err.Error())
+		return
+	}
 }
