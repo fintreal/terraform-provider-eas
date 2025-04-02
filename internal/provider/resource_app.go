@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/fintreal/expo-eas-sdk-go/eas"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -86,13 +87,13 @@ func (r *appResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	app := eas.CreateAppData{
+	input := eas.CreateAppData{
 		Name:      plan.Name.ValueString(),
 		Slug:      plan.Slug.ValueString(),
 		AccountId: r.client.accountId,
 	}
 
-	data, err := r.client.App.Create(app)
+	data, err := r.client.App.Create(input)
 
 	if err != nil {
 		resp.Diagnostics.AddError("Unable to Create'app'", err.Error())
@@ -109,8 +110,51 @@ func (r *appResource) Create(ctx context.Context, req resource.CreateRequest, re
 
 // Update updates the resource and sets the updated Terraform state on success.
 func (r *appResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan appResourceModel
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	var currentState appResourceModel
+	diags = req.State.Get(ctx, &currentState)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Not possible to update slug!
+	if plan.Slug.ValueString() != currentState.Slug.ValueString() {
+		resp.Diagnostics.AddAttributeError(path.Root("slug"), "Error Updating 'app'", "App slug cannot be changed!")
+	}
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	input := eas.UpdateAppData{
+		Id:   currentState.Id.ValueString(),
+		Name: plan.Name.ValueString(),
+	}
+
+	data, err := r.client.App.Update(input)
+	if err != nil {
+		resp.Diagnostics.AddError("Error Updating 'app'", err.Error())
+		return
+	}
+
+	newState := appResourceModel{
+		Id:   types.StringValue(data.Id),
+		Name: types.StringValue(data.Name),
+		Slug: types.StringValue(data.Slug),
+	}
+
+	diags = resp.State.Set(ctx, newState)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
 
-// Delete deletes the resource and removes the Terraform state on success.
 func (r *appResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 }
