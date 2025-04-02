@@ -1,144 +1,75 @@
-// // Copyright (c) HashiCorp, Inc.
-// // SPDX-License-Identifier: MPL-2.0
-
 package provider
 
-// import (
-// 	"context"
+import (
+	"context"
 
-// 	"github.com/hashicorp/terraform-plugin-framework/path"
-// 	"github.com/hashicorp/terraform-plugin-framework/resource"
-// 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-// 	"github.com/hashicorp/terraform-plugin-framework/types"
-// )
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
-// // Ensure provider defined types fully satisfy framework interfaces.
-// var _ resource.Resource = &ProjectResource{}
-// var _ resource.ResourceWithImportState = &ProjectResource{}
+var _ resource.Resource = &appResource{}
+var _ resource.ResourceWithConfigure = &appResource{}
 
-// func NewProjectResource() resource.Resource {
-// 	return &ProjectResource{}
-// }
+func NewAppResource() resource.Resource {
+	return &appResource{}
+}
 
-// type ProjectResource struct {
-// }
+type appResource struct {
+	client *easClient
+}
 
-// type projectResourceModel struct {
-// 	Name  types.String `tfsdk:"name"`
-// 	ID    types.String `tfsdk:"id"`
-// 	Owner types.String `tfsdk:"owner"`
-// }
+func (r *appResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_app"
+}
 
-// func (r *ProjectResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-// 	resp.TypeName = req.ProviderTypeName + "_project"
-// }
+func (d *appResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
 
-// func (r *ProjectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-// 	resp.Schema = schema.Schema{
-// 		MarkdownDescription: "Project Resource",
+	client, _ := req.ProviderData.(*easClient)
 
-// 		Attributes: map[string]schema.Attribute{
-// 			"name": schema.StringAttribute{
-// 				MarkdownDescription: "Name",
-// 				Required:            true,
-// 			},
-// 			"id": schema.StringAttribute{
-// 				MarkdownDescription: "ID",
-// 				Computed:            true,
-// 			},
-// 			"owner": schema.StringAttribute{
-// 				MarkdownDescription: "Owner",
-// 				Computed:            true,
-// 			},
-// 		},
-// 	}
-// }
+	d.client = client
+}
 
-// func (r *ProjectResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *appResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{Attributes: map[string]schema.Attribute{
+		"id": schema.StringAttribute{
+			Required: true,
+		},
+	}}
+}
 
-// }
+func (r *appResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var config exampleDataSourceModel
+	diags := resp.State.Get(ctx, &config)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	data, err := r.client.App.Get(config.Id.ValueString())
 
-// func (r *ProjectResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-// 	var data projectResourceModel
+	if err != nil {
+		resp.Diagnostics.AddError("Unable to Read 'app'", err.Error())
+		return
+	}
 
-// 	// Read Terraform plan data into the model
-// 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	state := exampleDataSourceModel{
+		Id: types.StringValue(data.Id),
+	}
+	diags = resp.State.Set(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+}
 
-// 	if resp.Diagnostics.HasError() {
-// 		return
-// 	}
-// 	obj, err := eas.CreateProject(data.Name.ValueString())
+// Create creates the resource and sets the initial Terraform state.
+func (r *appResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+}
 
-// 	if err != nil {
-// 		resp.Diagnostics.AddError(err.Error(), "")
-// 		return
-// 	}
+// Update updates the resource and sets the updated Terraform state on success.
+func (r *appResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+}
 
-// 	state := projectResourceModel{
-// 		Name:  types.StringValue(obj.Name),
-// 		Owner: types.StringValue(obj.Owner),
-// 		ID:    types.StringValue(obj.ID),
-// 	}
-
-// 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
-// }
-
-// func (r *ProjectResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-// 	var data projectResourceModel
-
-// 	// Read Terraform prior state data into the model
-// 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
-
-// 	if resp.Diagnostics.HasError() {
-// 		return
-// 	}
-
-// 	// If applicable, this is a great opportunity to initialize any necessary
-// 	// provider client data and make a call using it.
-// 	// httpResp, err := r.client.Do(httpReq)
-// 	// if err != nil {
-// 	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read example, got error: %s", err))
-// 	//     return
-// 	// }
-
-// 	// Save updated data into Terraform state
-// 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
-// }
-
-// func (r *ProjectResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-// 	var data projectResourceModel
-
-// 	// Read Terraform plan data into the model
-// 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
-
-// 	if resp.Diagnostics.HasError() {
-// 		return
-// 	}
-
-// 	// If applicable, this is a great opportunity to initialize any necessary
-// 	// provider client data and make a call using it.
-// 	// httpResp, err := r.client.Do(httpReq)
-// 	// if err != nil {
-// 	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update example, got error: %s", err))
-// 	//     return
-// 	// }
-
-// 	// Save updated data into Terraform state
-// 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
-// }
-
-// func (r *ProjectResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-// 	var data projectResourceModel
-
-// 	// Read Terraform prior state data into the model
-// 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
-
-// 	if resp.Diagnostics.HasError() {
-// 		return
-// 	}
-
-// }
-
-// func (r *ProjectResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-// 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-// }
+// Delete deletes the resource and removes the Terraform state on success.
+func (r *appResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+}

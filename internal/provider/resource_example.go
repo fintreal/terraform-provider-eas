@@ -42,10 +42,6 @@ func (r *exampleResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 	}}
 }
 
-// Create creates the resource and sets the initial Terraform state.
-func (r *exampleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-}
-
 // Read refreshes the Terraform state with the latest data.
 func (r *exampleResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var config exampleDataSourceModel
@@ -67,6 +63,10 @@ func (r *exampleResource) Read(ctx context.Context, req resource.ReadRequest, re
 	}
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
+}
+
+// Create creates the resource and sets the initial Terraform state.
+func (r *exampleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 }
 
 // Update updates the resource and sets the updated Terraform state on success.
