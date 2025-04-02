@@ -1,0 +1,16 @@
+terraform {
+  required_providers {
+    eas = {
+      source = "registry.terraform.io/fintreal/expo-eas"
+    }
+  }
+}
+
+resource "eas_app_variable" "app_variable2" {
+    app_id = "953ed82f-4ac7-47be-ab46-d9c7a1169fe6"
+    name = "API_KEY2"
+    value  = "my-api-key2"
+    visibility = "PUBLIC"
+    environments = ["DEVELOPMENT"]
+}
+

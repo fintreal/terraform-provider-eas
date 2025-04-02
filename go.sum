@@ -6,8 +6,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/fatih/color v1.13.0/go.mod h1:kLAiJbzzSOZDVNGyDpeOxJ47H46qBXwg5ILebYFFOfk=
 github.com/fatih/color v1.16.0 h1:zmkK9Ngbjj+K0yRhTVONQh1p/HknKYSlNT+vZCzyokM=
 github.com/fatih/color v1.16.0/go.mod h1:fL2Sau1YI5c0pdGEVCbKQbLXB6edEj1ZgiY4NijnWvE=
-github.com/fintreal/expo-eas-sdk-go v0.7.0 h1:C7vIosVoz0MqcT2lo39MmAMQG0ot0l7BUClQyR9g1Ic=
-github.com/fintreal/expo-eas-sdk-go v0.7.0/go.mod h1:jbd5frrjoRZWYPtt4j8pjj4Bc8aXvQA6J6KPHseYvhM=
+github.com/fintreal/expo-eas-sdk-go v0.9.9 h1:QT8Eh6n14ojcwcj6dOOy5bAPv2Pcr7hYYJoXK6n4Dyk=
+github.com/fintreal/expo-eas-sdk-go v0.9.9/go.mod h1:jbd5frrjoRZWYPtt4j8pjj4Bc8aXvQA6J6KPHseYvhM=
 github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
 github.com/go-logr/logr v1.4.2/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=

@@ -1,177 +1,154 @@
-// // Copyright (c) HashiCorp, Inc.
-// // SPDX-License-Identifier: MPL-2.0
-
 package provider
 
-// import (
-// 	"context"
-// 	"terraform-provider-expo-eas/internal/eas"
+import (
+	"context"
 
-// 	"github.com/hashicorp/terraform-plugin-framework/path"
-// 	"github.com/hashicorp/terraform-plugin-framework/resource"
-// 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-// 	"github.com/hashicorp/terraform-plugin-framework/types"
-// )
+	"github.com/fintreal/expo-eas-sdk-go/eas"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
-// // Ensure provider defined types fully satisfy framework interfaces.
-// var _ resource.Resource = &projectVariableResource{}
-// var _ resource.ResourceWithImportState = &projectVariableResource{}
+var _ resource.Resource = &appVariableResource{}
+var _ resource.ResourceWithConfigure = &appVariableResource{}
 
-// func NewProjectVariableResource() resource.Resource {
-// 	return &projectVariableResource{}
-// }
+func NewAppVariableResource() resource.Resource {
+	return &appVariableResource{}
+}
 
-// type projectVariableResource struct {
-// }
+type appVariableResource struct {
+	client *easClient
+}
 
-// type ProjectVariableResourceModel struct {
-// 	ProjectName types.String `tfsdk:"project_name"`
-// 	Name        types.String `tfsdk:"name"`
-// 	Value       types.String `tfsdk:"value"`
-// 	Visibility  types.String `tfsdk:"visibility"`
-// 	Environment types.String `tfsdk:"environment"`
-// }
+type appVariableResourceModel struct {
+	AppId        types.String `tfsdk:"app_id"`
+	Id           types.String `tfsdk:"id"`
+	Name         types.String `tfsdk:"name"`
+	Value        types.String `tfsdk:"value"`
+	Visibility   types.String `tfsdk:"visibility"`
+	Environments types.Set    `tfsdk:"environments"`
+}
 
-// func (r *projectVariableResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-// 	resp.TypeName = req.ProviderTypeName + "_project_variable"
-// }
+func (r *appVariableResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_app_variable"
+}
 
-// func (r *projectVariableResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-// 	resp.Schema = schema.Schema{
-// 		MarkdownDescription: "Project Resource",
+func (d *appVariableResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
 
-// 		Attributes: map[string]schema.Attribute{
-// 			"project_name": schema.StringAttribute{
-// 				MarkdownDescription: "Project Name",
-// 				Required:            true,
-// 			},
-// 			"name": schema.StringAttribute{
-// 				MarkdownDescription: "Name",
-// 				Required:            true,
-// 			},
-// 			"value": schema.StringAttribute{
-// 				MarkdownDescription: "Value",
-// 				Required:            true,
-// 			},
-// 			"visibility": schema.StringAttribute{
-// 				MarkdownDescription: "Visibility",
-// 				Required:            true,
-// 			},
-// 			"environment": schema.StringAttribute{
-// 				MarkdownDescription: "Environment",
-// 				Required:            true,
-// 			},
-// 		},
-// 	}
-// }
+	client, _ := req.ProviderData.(*easClient)
 
-// func (r *projectVariableResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-// }
+	d.client = client
+}
 
-// func (r *projectVariableResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-// 	var data ProjectVariableResourceModel
+func (r *appVariableResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{Attributes: map[string]schema.Attribute{
+		"id": schema.StringAttribute{
+			Computed: true,
+		},
+		"app_id": schema.StringAttribute{
+			Required: true,
+		},
+		"name": schema.StringAttribute{
+			Required: true,
+		},
+		"value": schema.StringAttribute{
+			Required: true,
+		},
+		"visibility": schema.StringAttribute{
+			Required:   true,
+			Validators: []validator.String{}, // TODO
+		},
+		"environments": schema.SetAttribute{
+			ElementType: types.StringType,
+			Required:    true,
+		},
+	}}
+}
 
-// 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+func (r *appVariableResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var config appVariableResourceModel
+	diags := resp.State.Get(ctx, &config)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	data, err := r.client.AppEnvVar.Get(config.Id.ValueString(), config.AppId.ValueString())
 
-// 	if resp.Diagnostics.HasError() {
-// 		return
-// 	}
+	if err != nil {
+		resp.Diagnostics.AddError("Unable to Read 'app_variable'", err.Error())
+		return
+	}
 
-// 	projectName := data.ProjectName.ValueString()
-// 	projectVariableProps := eas.ProjectVariableProps{
-// 		Name:        data.Name.ValueString(),
-// 		Value:       data.Value.ValueString(),
-// 		Environment: data.Environment.ValueString(),
-// 		Visibility:  data.Visibility.ValueString(),
-// 	}
+	var environments []attr.Value
+	for _, environment := range data.Environments {
+		environments = append(environments, types.StringValue(string(environment)))
+	}
+	state := appVariableDataSourceModel{
+		Id:           types.StringValue(data.Id),
+		AppId:        types.StringValue(data.AppId),
+		Name:         types.StringValue(data.Name),
+		Value:        types.StringValue(data.Value),
+		Visibility:   types.StringValue(data.Visibility),
+		Environments: types.SetValueMust(types.StringType, environments),
+	}
 
-// 	obj, err := eas.CreateProjectVariable(projectName, projectVariableProps)
+	diags = resp.State.Set(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+}
 
-// 	if err != nil {
-// 		resp.Diagnostics.AddError(err.Error(), "")
-// 		return
-// 	}
+// Create creates the resource and sets the initial Terraform state.
+func (r *appVariableResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan appVariableResourceModel
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-// 	state := ProjectVariableResourceModel{
-// 		Name:        types.StringValue(obj.Name),
-// 		Value:       types.StringValue(obj.Value),
-// 		Environment: types.StringValue(obj.Environment),
-// 		Visibility:  types.StringValue(obj.Visibility),
-// 		ProjectName: data.ProjectName,
-// 	}
+	var easEnvironments []string
+	for _, environment := range plan.Environments.Elements() {
+		easEnvironments = append(easEnvironments, (environment.(types.String)).ValueString())
+	}
 
-// 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
-// }
+	appVariable := eas.CreateAppEnvVarData{
+		AppId:        plan.AppId.ValueString(),
+		Name:         plan.Name.ValueString(),
+		Value:        plan.Value.ValueString(),
+		Visibility:   plan.Visibility.ValueString(),
+		Environments: easEnvironments,
+	}
+	data, err := r.client.AppEnvVar.Create(appVariable)
 
-// func (r *projectVariableResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-// 	var data ProjectVariableResourceModel
+	if err != nil {
+		resp.Diagnostics.AddError("Unable to Create'app_variable'", err.Error())
+		return
+	}
 
-// 	// Read Terraform prior state data into the model
-// 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+	var environments []attr.Value
+	for _, environment := range data.Environments {
+		environments = append(environments, types.StringValue(environment))
+	}
+	state := appVariableResourceModel{
+		Id:           types.StringValue(data.Id),
+		AppId:        types.StringValue(data.AppId),
+		Name:         types.StringValue(data.Name),
+		Value:        types.StringValue(data.Value),
+		Visibility:   types.StringValue(data.Visibility),
+		Environments: types.SetValueMust(types.StringType, environments),
+	}
+	diags = resp.State.Set(ctx, state)
+	resp.Diagnostics.Append(diags...)
+}
 
-// 	if resp.Diagnostics.HasError() {
-// 		return
-// 	}
+// Update updates the resource and sets the updated Terraform state on success.
+func (r *appVariableResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+}
 
-// 	out, err := eas.GetProjectVariable(
-// 		data.ProjectName.ValueString(),
-// 		data.Name.ValueString(),
-// 		data.Environment.ValueString(),
-// 	)
-// 	if err != nil {
-// 		resp.Diagnostics.AddError(err.Error(), "")
-// 		return
-// 	}
-// 	data = ProjectVariableResourceModel{
-// 		ProjectName: data.ProjectName,
-// 		Name:        types.StringValue(out.Name),
-// 		Environment: types.StringValue(out.Environment),
-// 		Visibility:  types.StringValue(out.Visibility),
-// 		Value:       types.StringValue(out.Value),
-// 	}
-
-// 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
-// }
-
-// func (r *projectVariableResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-// 	var data ProjectVariableResourceModel
-
-// 	// Read Terraform plan data into the model
-// 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
-
-// 	if resp.Diagnostics.HasError() {
-// 		return
-// 	}
-
-// 	// If applicable, this is a great opportunity to initialize any necessary
-// 	// provider client data and make a call using it.
-// 	// httpResp, err := r.client.Do(httpReq)
-// 	// if err != nil {
-// 	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update example, got error: %s", err))
-// 	//     return
-// 	// }
-
-// 	// Save updated data into Terraform state
-// 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
-// }
-
-// func (r *projectVariableResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-// 	var data ProjectVariableResourceModel
-
-// 	// Read Terraform prior state data into the model
-// 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
-
-// 	_, err := eas.DeleteProjectVariable(
-// 		data.ProjectName.ValueString(),
-// 		data.Name.ValueString(),
-// 		data.Environment.ValueString(),
-// 	)
-
-// 	if err != nil {
-// 		resp.Diagnostics.AddError(err.Error(), "")
-// 	}
-// }
-
-// func (r *projectVariableResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-// 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-// }
+// Delete deletes the resource and removes the Terraform state on success.
+func (r *appVariableResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+}

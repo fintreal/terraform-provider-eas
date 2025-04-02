@@ -3,7 +3,7 @@ module terraform-provider-expo-eas
 go 1.24.1
 
 require (
-	github.com/fintreal/expo-eas-sdk-go v0.7.0
+	github.com/fintreal/expo-eas-sdk-go v0.9.9
 	github.com/hashicorp/terraform-plugin-framework v1.14.1
 )
 
