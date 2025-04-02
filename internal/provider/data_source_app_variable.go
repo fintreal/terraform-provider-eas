@@ -17,7 +17,7 @@ func NewAppVariableDataSource() datasource.DataSource {
 }
 
 type appVariableDataSource struct {
-	client easClient
+	client *easClient
 }
 
 type appVariableDataSourceModel struct {
@@ -65,7 +65,7 @@ func (d *appVariableDataSource) Configure(_ context.Context, req datasource.Conf
 
 	client, _ := req.ProviderData.(*easClient)
 
-	d.client = *client
+	d.client = client
 }
 
 func (d *appVariableDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
