@@ -4,6 +4,7 @@ import (
 	"context"
 	"terraform-provider-eas/internal/client"
 	"terraform-provider-eas/provider/app"
+	"terraform-provider-eas/provider/appvariable"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -26,10 +27,12 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"eas_app": app.DataSource(),
+			"eas_app":          app.DataSource(),
+			"eas_app_variable": appvariable.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"eas_app": app.Resource(),
+			"eas_app":          app.Resource(),
+			"eas_app_variable": appvariable.Resource(),
 		},
 		ConfigureContextFunc: func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 			token := d.Get("token").(string)
