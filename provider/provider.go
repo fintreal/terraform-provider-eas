@@ -14,13 +14,13 @@ func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"token": {
-				Description: "expo personal access token or robot access token",
+				Description: "Expo personal access token or robot access token. You can set this via `EXPO TOKEN` environment variable.",
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("EXPO_TOKEN", ""),
 			},
 			"account_name": {
-				Description: "expo user/organization account name",
+				Description: "Expo user/organization account name. You can set this via `EXPO_ACCOUNT_NAME` environment variable.",
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("EXPO_ACCOUNT_NAME", ""),

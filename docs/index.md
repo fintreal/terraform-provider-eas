@@ -16,14 +16,16 @@ description: |-
 terraform {
   required_providers {
     eas = {
-      source = "registry.terraform.io/fintreal/eas"
+      source  = "fintreal/eas"
+      version = "~> 1.4.0"
     }
   }
 }
 
+
 provider "eas" {
-  token       = "EXPO_TOKEN" # you can set this via environment variable
-  accountName = "EXPO_ACCOUNT_NAME" # you can set this via environment variable
+  token       = "EXPO_TOKEN"
+  account_name = "EXPO_ACCOUNT_NAME"
 }
 ```
 
@@ -32,5 +34,5 @@ provider "eas" {
 
 ### Optional
 
-- `account_name` (String) expo user/organization account name
-- `token` (String) expo personal access token or robot access token
+- `account_name` (String) Expo user/organization account name. You can set this via `EXPO_ACCOUNT_NAME` environment variable.
+- `token` (String) Expo personal access token or robot access token. You can set this via `EXPO TOKEN` environment variable.

@@ -37,3 +37,4 @@ website/vendor
 .env
 
 *.terraform
+.terraform.lock.hcl
