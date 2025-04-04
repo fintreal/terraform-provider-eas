@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"terraform-provider-eas/internal/client"
+	"terraform-provider-eas/provider/app"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -23,6 +24,12 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("EXPO_ACCOUNT_NAME", ""),
 			},
+		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"eas_app": app.DataSource(),
+		},
+		ResourcesMap: map[string]*schema.Resource{
+			"eas_app": app.Resource(),
 		},
 		ConfigureContextFunc: func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 			token := d.Get("token").(string)
