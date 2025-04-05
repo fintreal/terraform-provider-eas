@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"terraform-provider-eas/internal/client"
 	"terraform-provider-eas/provider/app"
+	"terraform-provider-eas/provider/appleteam"
 	"terraform-provider-eas/provider/appvariable"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -30,10 +31,12 @@ func Provider() *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"eas_app":          app.DataSource(),
 			"eas_app_variable": appvariable.DataSource(),
+			"eas_apple_team":   appleteam.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"eas_app":          app.Resource(),
 			"eas_app_variable": appvariable.Resource(),
+			"eas_apple_team":   appleteam.Resource(),
 		},
 		ConfigureContextFunc: func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 			token := d.Get("token").(string)
