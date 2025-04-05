@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"terraform-provider-eas/internal/client"
 	"terraform-provider-eas/provider/app"
 	"terraform-provider-eas/provider/appvariable"
@@ -38,12 +39,38 @@ func Provider() *schema.Provider {
 			token := d.Get("token").(string)
 			accountName := d.Get("account_name").(string)
 
-			client, err := client.NewEASClient(token, accountName)
-
 			var diags diag.Diagnostics
 
-			if err != nil {
+			if token == "" {
+				diags = append(diags, diag.Diagnostic{
+					Severity: diag.Error,
+					Summary:  "token value cannot be an empty string",
+					Detail:   "set the token value in the provider configuration or via the EXPO_TOKEN environment variable",
+				})
+			}
+
+			if accountName == "" {
+				diags = append(diags, diag.Diagnostic{
+					Severity: diag.Error,
+					Summary:  "account_name value cannot be an empty string",
+					Detail:   "set the token value in the provider configuration or via the EXPO_ACCOUNT_NAME environment variable",
+				})
+			}
+
+			if len(diags) > 0 {
 				return nil, diags
+			}
+
+			client, err := client.NewEASClient(token, accountName)
+
+			if err != nil {
+				return nil, diag.Diagnostics{
+					diag.Diagnostic{
+						Severity: diag.Error,
+						Summary:  "Failed to initialize EAS client",
+						Detail:   fmt.Sprintf("Error: %v", err),
+					},
+				}
 			}
 
 			return client, diags
