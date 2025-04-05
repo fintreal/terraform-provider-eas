@@ -2,11 +2,10 @@ terraform {
   required_providers {
     eas = {
       source  = "fintreal/eas"
-      version = "~> 1.4.0"
+      version = "~> 1.4"
     }
   }
 }
-
 
 provider "eas" {
   token       = "EXPO_TOKEN"
