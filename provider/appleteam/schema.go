@@ -4,6 +4,7 @@ import (
 	"terraform-provider-eas/provider/appleteam/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func DataSource() *schema.Resource {
@@ -15,11 +16,6 @@ func DataSource() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-			"account_id": {
-				Description: "The account ID associated with the Apple Team",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
 			"name": {
 				Description: "The name of the Apple Team",
 				Type:        schema.TypeString,
@@ -28,7 +24,7 @@ func DataSource() *schema.Resource {
 			"identifier": {
 				Description: "The identifier of the Apple Team",
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 			},
 			"type": {
 				Description: "The account ID associated with the Apple Team",
@@ -51,11 +47,6 @@ func Resource() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-			"account_id": {
-				Description: "The account ID associated with the Apple Team",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
 			"name": {
 				Description: "The name of the Apple Team",
 				Type:        schema.TypeString,
@@ -67,9 +58,10 @@ func Resource() *schema.Resource {
 				Required:    true,
 			},
 			"type": {
-				Description: "The account ID associated with the Apple Team",
-				Type:        schema.TypeString,
-				Required:    true,
+				Description:  "Apple Team type. Can be `COMPANY_OR_ORGANIZATION`, `IN_HOUSE` or `INDIVIDUAL`.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringInSlice([]string{"COMPANY_OR_ORGANIZATION", "IN_HOUSE", "INDIVIDUAL"}, false),
 			},
 		},
 	}
