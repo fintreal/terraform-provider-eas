@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write
 
+env:
+  GOPRIVATE: github.com/fintreal/*
+  GITHUB_TOKEN: ${{ github.token }}
+  GONOSUMDB: github.com/fintreal/*
+
 jobs:
   Docs:
     runs-on: ubuntu-latest
