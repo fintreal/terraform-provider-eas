@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"terraform-provider-eas/internal/client"
 	"terraform-provider-eas/provider/app"
+	"terraform-provider-eas/provider/apple/appcredentials"
 	"terraform-provider-eas/provider/apple/appidentifier"
 	"terraform-provider-eas/provider/apple/appstoreapikey"
 	"terraform-provider-eas/provider/apple/certificate"
@@ -47,6 +48,7 @@ func Provider() *schema.Provider {
 			"eas_apple_team":           team.Resource(),
 			"eas_provisioning_profile": provisioningprofile.Resource(),
 			"eas_apple_app_identifier": appidentifier.Resource(),
+			"eas_app_credentials":      appcredentials.Resource(),
 		},
 		ConfigureContextFunc: func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 			token := d.Get("token").(string)
