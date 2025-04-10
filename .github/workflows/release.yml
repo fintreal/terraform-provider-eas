@@ -10,7 +10,7 @@ permissions:
 
 env:
   GOPRIVATE: github.com/fintreal/*
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   GONOSUMDB: github.com/fintreal/*
 
 jobs:
