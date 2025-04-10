@@ -11,7 +11,7 @@ import (
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*client.EASClient)
 	id := d.Get("id").(string)
-	err := client.AppVariable.Delete(id)
+	_, err := client.AppVariable.Delete(id)
 
 	var diags diag.Diagnostics
 	if err != nil {

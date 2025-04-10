@@ -4,6 +4,7 @@ import (
 	"context"
 	"terraform-provider-eas/internal/client"
 
+	"github.com/fintreal/eas-sdk-go/eas"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -11,10 +12,13 @@ import (
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := m.(*client.EASClient)
-	appId := d.Get("app_id").(string)
-	name := d.Get("name").(string)
 
-	data, err := client.AppVariable.GetByName(name, appId)
+	input := eas.GetByNameAppVariableData{
+		Name:  d.Get("name").(string),
+		AppId: d.Get("app_id").(string),
+	}
+
+	data, err := client.AppVariable.GetByName(input)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -37,7 +41,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err := d.Set("environments", data.Environments); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
-	if err := d.Set("app_id", appId); err != nil {
+	if err := d.Set("app_id", input.AppId); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 

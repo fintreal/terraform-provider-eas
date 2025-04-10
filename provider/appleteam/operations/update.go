@@ -22,7 +22,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		Type: teamType,
 	}
 
-	data, err := client.AppleTeam.Update(input)
+	data, err := client.Apple.Team.Update(input)
 	if err != nil {
 		return diag.FromErr(err)
 	}

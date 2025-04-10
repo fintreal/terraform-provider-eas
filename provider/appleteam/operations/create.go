@@ -23,7 +23,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		AccountId:  client.AccountId,
 	}
 
-	data, err := client.AppleTeam.Create(input)
+	data, err := client.Apple.Team.Create(input)
 	if err != nil {
 		return diag.FromErr(err)
 	}

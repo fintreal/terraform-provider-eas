@@ -4,6 +4,7 @@ import (
 	"context"
 	"terraform-provider-eas/internal/client"
 
+	"github.com/fintreal/eas-sdk-go/eas"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -13,7 +14,11 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*client.EASClient)
 
 	identifier := d.Get("identifier").(string)
-	data, err := client.AppleTeam.GetByIdentifier(identifier, client.AccountId)
+	input := eas.GetByIdentifierAppleTeamData{
+		AccountId:  client.AccountId,
+		Identifier: identifier,
+	}
+	data, err := client.Apple.Team.GetByIdentifier(input)
 
 	if err != nil {
 		return diag.FromErr(err)
