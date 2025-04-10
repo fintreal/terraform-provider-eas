@@ -35,5 +35,19 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
+	var appStoreMap map[string]any
+	for _, buildCredential := range data.BuildCredentials {
+		if buildCredential.DistributionType == "APP_STORE" {
+			appStoreMap = map[string]any{
+				"id":                      buildCredential.Id,
+				"certificate_id":          buildCredential.CertificateId,
+				"provisioning_profile_id": buildCredential.ProvisioningProfileId,
+			}
+			if err := d.Set("app_store", []any{appStoreMap}); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+			}
+		}
+	}
+
 	return diags
 }

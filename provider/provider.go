@@ -41,6 +41,7 @@ func Provider() *schema.Provider {
 			"eas_apple_certificate":    certificate.DataSource(),
 			"eas_provisioning_profile": provisioningprofile.DataSource(),
 			"eas_apple_app_identifier": appidentifier.DataSource(),
+			"eas_app_credentials":      appcredentials.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"eas_app":                  app.Resource(),
