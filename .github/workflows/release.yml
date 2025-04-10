@@ -28,14 +28,17 @@ jobs:
 
       - name: Installl tfplugindocs
         run: go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest
+      - name: Git config
+        run: |
+          git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+          git config user.name "bot"
+          git config user.email "bot@fintreal.com"
 
       - name: Generate docs
         run: $HOME/go/bin/tfplugindocs
 
       - name: "Commit and push docs"
-        run : |
-          git config user.name "bot"
-          git config user.email "bot@fintreal.com"
+        run: |
           git diff --quiet || (git add . && git commit -m "chore: auto-generate docs [skip ci]" && git push)
 
   Version:
