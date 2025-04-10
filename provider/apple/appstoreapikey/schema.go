@@ -16,7 +16,7 @@ func DataSource() *schema.Resource {
 				Computed:    true,
 			},
 			"name": {
-				Description: "EAS NAme of the App Store Api Key",
+				Description: "EAS Name of the App Store Api Key",
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
