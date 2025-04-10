@@ -6,6 +6,7 @@ import (
 	"terraform-provider-eas/internal/client"
 	"terraform-provider-eas/provider/app"
 	"terraform-provider-eas/provider/apple/appstoreapikey"
+	"terraform-provider-eas/provider/apple/certificate"
 	"terraform-provider-eas/provider/appleteam"
 	"terraform-provider-eas/provider/appvariable"
 
@@ -34,6 +35,7 @@ func Provider() *schema.Provider {
 			"eas_app_variable":      appvariable.DataSource(),
 			"eas_apple_team":        appleteam.DataSource(),
 			"eas_app_store_api_key": appstoreapikey.DataSource(),
+			"eas_apple_certificate": certificate.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"eas_app":          app.Resource(),
