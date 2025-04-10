@@ -1,7 +1,7 @@
-package appleteam
+package team
 
 import (
-	"terraform-provider-eas/provider/appleteam/operations"
+	"terraform-provider-eas/provider/apple/team/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
