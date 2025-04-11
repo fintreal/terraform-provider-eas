@@ -42,6 +42,11 @@ output "out" {
 - `app_id` (String) EAS App Id
 - `id` (String) EAS App Credentials Id
 
+### Optional
+
+- `app_store_api_key_id` (String) EAS App Store Api Key Id
+- `push_key_id` (String) EAS Apple Push Key Id
+
 ### Read-Only
 
 - `app_identifier_id` (String) EAS App Identifier Id
