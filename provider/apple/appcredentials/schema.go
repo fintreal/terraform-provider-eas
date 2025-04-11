@@ -70,6 +70,7 @@ func Resource() *schema.Resource {
 		ReadContext:   operations.Read,
 		CreateContext: operations.Create,
 		DeleteContext: operations.Delete,
+		UpdateContext: operations.Update,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "EAS App Credentials Id",
@@ -103,7 +104,6 @@ func Resource() *schema.Resource {
 			"app_store": {
 				Description: "EAS App Build Credentials for App Store",
 				Type:        schema.TypeList,
-				ForceNew:    true,
 				Optional:    true,
 				MaxItems:    1, // ensures it's treated like an object
 				Elem: &schema.Resource{
