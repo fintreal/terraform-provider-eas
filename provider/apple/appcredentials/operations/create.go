@@ -17,6 +17,15 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		AppIdentifierId: d.Get("app_identifier_id").(string),
 	}
 
+	appStoreApiKeyId := d.Get("app_store_api_key_id").(string)
+	if appStoreApiKeyId != "" {
+		input.AppStoreApiKeyId = &appStoreApiKeyId
+	}
+	pushKeyId := d.Get("push_key_id").(string)
+	if pushKeyId != "" {
+		input.PushKeyId = &pushKeyId
+	}
+
 	data, err := client.Apple.AppCredentials.Create(input)
 	if err != nil {
 		return diag.FromErr(err)
@@ -26,6 +35,8 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	d.Set("id", data.Id)
 	d.Set("app_id", data.AppId)
 	d.Set("app_identifier_id", data.AppIdentifierId)
+	d.Set("app_store_api_key_id", data.AppStoreApiKeyId)
+	d.Set("push_key_id", data.PushKeyId)
 
 	appStoreList := d.Get("app_store").([]any)
 

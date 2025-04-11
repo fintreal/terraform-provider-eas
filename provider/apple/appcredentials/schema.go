@@ -25,6 +25,18 @@ func DataSource() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
+			"app_store_api_key_id": {
+				Description: "EAS App Store Api Key Id",
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+			},
+			"push_key_id": {
+				Description: "EAS Apple Push Key Id",
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+			},
 			"app_store": {
 				Description: "EAS App Build Credentials for App Store",
 				Type:        schema.TypeList,
@@ -74,6 +86,18 @@ func Resource() *schema.Resource {
 				Description: "EAS App Identifier Id",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
+			},
+			"app_store_api_key_id": {
+				Description: "EAS App Store Api Key Id",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+			},
+			"push_key_id": {
+				Description: "EAS Apple Push Key Id",
+				Type:        schema.TypeString,
+				Optional:    true,
 				ForceNew:    true,
 			},
 			"app_store": {

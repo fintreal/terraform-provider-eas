@@ -34,6 +34,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err := d.Set("app_identifier_id", data.AppIdentifierId); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
+	if err := d.Set("app_store_api_key_id", data.AppStoreApiKeyId); err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+	}
+	if err := d.Set("push_key_id", data.PushKeyId); err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+	}
 
 	var appStoreMap map[string]any
 	for _, buildCredential := range data.BuildCredentials {

@@ -23,6 +23,8 @@ github.com/fintreal/eas-sdk-go v1.9.0 h1:fvtkt8EOCcukoOhm62+3CkE5Zi+8jOt97uWZkxo
 github.com/fintreal/eas-sdk-go v1.9.0/go.mod h1:2ySq7d8LflUSVTmMfIta0idAUCda94naIjenHUb28iM=
 github.com/fintreal/eas-sdk-go v1.10.0 h1:lHrzZkE9BvNliLCRIKqN4DEd3TVE4z6aL6geyNXkrt4=
 github.com/fintreal/eas-sdk-go v1.10.0/go.mod h1:2ySq7d8LflUSVTmMfIta0idAUCda94naIjenHUb28iM=
+github.com/fintreal/eas-sdk-go v1.11.0 h1:7FIOUrPEmvKznnl+nFvH5Amem4gqKtbcuLuVkz9iMGA=
+github.com/fintreal/eas-sdk-go v1.11.0/go.mod h1:2ySq7d8LflUSVTmMfIta0idAUCda94naIjenHUb28iM=
 github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
 github.com/go-logr/logr v1.4.2/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=
