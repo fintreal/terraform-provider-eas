@@ -10,6 +10,7 @@ import (
 	"terraform-provider-eas/provider/apple/appstoreapikey"
 	"terraform-provider-eas/provider/apple/certificate"
 	"terraform-provider-eas/provider/apple/provisioningprofile"
+	"terraform-provider-eas/provider/apple/pushkey"
 	"terraform-provider-eas/provider/apple/team"
 	"terraform-provider-eas/provider/appvariable"
 
@@ -42,6 +43,7 @@ func Provider() *schema.Provider {
 			"eas_provisioning_profile": provisioningprofile.DataSource(),
 			"eas_apple_app_identifier": appidentifier.DataSource(),
 			"eas_app_credentials":      appcredentials.DataSource(),
+			"eas_apple_push_key":       pushkey.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"eas_app":                  app.Resource(),
