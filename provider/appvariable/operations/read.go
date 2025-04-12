@@ -13,12 +13,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := m.(*client.EASClient)
 
-	input := eas.GetByNameAppVariableData{
-		Name:  d.Get("name").(string),
+	input := eas.GetAppVariableData{
+		Id:    d.Get("id").(string),
 		AppId: d.Get("app_id").(string),
 	}
 
-	data, err := client.AppVariable.GetByName(input)
+	data, err := client.AppVariable.Get(input)
 
 	if err != nil {
 		return diag.FromErr(err)
