@@ -40,7 +40,7 @@ output "out" {
 ### Required
 
 - `app_id` (String) EAS App Id
-- `id` (String) EAS App Credentials Id
+- `id` (String) EAS iOS App Credentials Id
 
 ### Optional
 

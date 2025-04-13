@@ -63,4 +63,4 @@ Required:
 
 Read-Only:
 
-- `id` (String) EAS Build Credential Id
+- `id` (String) EAS iOS Build Credential Id
