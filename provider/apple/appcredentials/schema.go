@@ -11,7 +11,7 @@ func DataSource() *schema.Resource {
 		ReadContext: operations.Read,
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Description: "EAS App Credentials Id",
+				Description: "EAS iOS App Credentials Id",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
@@ -109,7 +109,7 @@ func Resource() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Description: "EAS Build Credential Id",
+							Description: "EAS iOS Build Credential Id",
 							Type:        schema.TypeString,
 							Computed:    true,
 						},

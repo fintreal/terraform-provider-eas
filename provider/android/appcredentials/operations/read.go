@@ -17,7 +17,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		Id:    d.Get("id").(string),
 		AppId: d.Get("app_id").(string),
 	}
-	
+
 	data, err := client.Android.AppCredentials.Get(input)
 
 	if err != nil {
@@ -36,6 +36,20 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 	if err := d.Set("google_service_account_key_id", data.GoogleServiceAccountKeyId); err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+	}
+
+	buildCredentials := []map[string]any{}
+	for _, buildCredential := range data.BuildCredentials {
+		buildCredentialMap := map[string]any{
+			"id":          buildCredential.Id,
+			"name":        buildCredential.Name,
+			"keystore_id": buildCredential.KeystoreId,
+		}
+		buildCredentials = append(buildCredentials, buildCredentialMap)
+	}
+
+	if err := d.Set("build_credentials", buildCredentials); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
