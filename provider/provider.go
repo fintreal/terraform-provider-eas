@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"terraform-provider-eas/internal/client"
+	androidappcredentials "terraform-provider-eas/provider/android/appcredentials"
 	"terraform-provider-eas/provider/android/googleserviceaccountkey"
 	"terraform-provider-eas/provider/app"
-	"terraform-provider-eas/provider/apple/appcredentials"
+	appleappcredentials "terraform-provider-eas/provider/apple/appcredentials"
 	"terraform-provider-eas/provider/apple/appidentifier"
 	"terraform-provider-eas/provider/apple/appstoreapikey"
 	"terraform-provider-eas/provider/apple/certificate"
@@ -43,17 +44,18 @@ func Provider() *schema.Provider {
 			"eas_apple_certificate":          certificate.DataSource(),
 			"eas_provisioning_profile":       provisioningprofile.DataSource(),
 			"eas_apple_app_identifier":       appidentifier.DataSource(),
-			"eas_app_credentials":            appcredentials.DataSource(),
+			"eas_app_credentials":            appleappcredentials.DataSource(),
 			"eas_apple_push_key":             pushkey.DataSource(),
 			"eas_google_service_account_key": googleserviceaccountkey.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"eas_app":                  app.Resource(),
-			"eas_app_variable":         appvariable.Resource(),
-			"eas_apple_team":           team.Resource(),
-			"eas_provisioning_profile": provisioningprofile.Resource(),
-			"eas_apple_app_identifier": appidentifier.Resource(),
-			"eas_app_credentials":      appcredentials.Resource(),
+			"eas_app":                     app.Resource(),
+			"eas_app_variable":            appvariable.Resource(),
+			"eas_apple_team":              team.Resource(),
+			"eas_provisioning_profile":    provisioningprofile.Resource(),
+			"eas_apple_app_identifier":    appidentifier.Resource(),
+			"eas_app_credentials":         appleappcredentials.Resource(),
+			"eas_android_app_credentials": androidappcredentials.Resource(),
 		},
 		ConfigureContextFunc: func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 			token := d.Get("token").(string)
