@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"terraform-provider-eas/internal/client"
+	"terraform-provider-eas/provider/android/googleserviceaccountkey"
 	"terraform-provider-eas/provider/app"
 	"terraform-provider-eas/provider/apple/appcredentials"
 	"terraform-provider-eas/provider/apple/appidentifier"
@@ -35,15 +36,16 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"eas_app":                  app.DataSource(),
-			"eas_app_variable":         appvariable.DataSource(),
-			"eas_apple_team":           team.DataSource(),
-			"eas_app_store_api_key":    appstoreapikey.DataSource(),
-			"eas_apple_certificate":    certificate.DataSource(),
-			"eas_provisioning_profile": provisioningprofile.DataSource(),
-			"eas_apple_app_identifier": appidentifier.DataSource(),
-			"eas_app_credentials":      appcredentials.DataSource(),
-			"eas_apple_push_key":       pushkey.DataSource(),
+			"eas_app":                        app.DataSource(),
+			"eas_app_variable":               appvariable.DataSource(),
+			"eas_apple_team":                 team.DataSource(),
+			"eas_app_store_api_key":          appstoreapikey.DataSource(),
+			"eas_apple_certificate":          certificate.DataSource(),
+			"eas_provisioning_profile":       provisioningprofile.DataSource(),
+			"eas_apple_app_identifier":       appidentifier.DataSource(),
+			"eas_app_credentials":            appcredentials.DataSource(),
+			"eas_apple_push_key":             pushkey.DataSource(),
+			"eas_google_service_account_key": googleserviceaccountkey.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"eas_app":                  app.Resource(),
