@@ -36,6 +36,12 @@ func Resource() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
+			"fcm_key": {
+				Description: "FCM Google Service Account Key Id",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+			},
 			"build_credentials": {
 				Description: "EAS Android Build Credentials",
 				Type:        schema.TypeList,

@@ -38,6 +38,9 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err := d.Set("google_service_account_key_id", data.GoogleServiceAccountKeyId); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
+	if err := d.Set("fcm_key", data.FCMKey); err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+	}
 
 	buildCredentials := []map[string]any{}
 	for _, buildCredential := range data.BuildCredentials {

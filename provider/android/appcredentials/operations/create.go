@@ -39,6 +39,21 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
+	fcmKeyInput := eas.CreateFCMKey{
+		KeyJson:          d.Get("fcm_key").(string),
+		AccountId:        client.AccountId,
+		AppCredentialsId: data.Id,
+	}
+
+	dataFcmKey, err := client.Android.FCMKey.Create(fcmKeyInput)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := d.Set("fcm_key", dataFcmKey.KeyJson); err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+	}
+
 	buildCredentialsList := d.Get("build_credentials").([]any)
 
 	buildCredentialsNewList := make([]any, len(buildCredentialsList))
