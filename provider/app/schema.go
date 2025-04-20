@@ -37,6 +37,7 @@ func Resource() *schema.Resource {
 		ReadContext:   operations.Read,
 		UpdateContext: operations.Update,
 		DeleteContext: operations.Delete,
+		Importer:      &schema.ResourceImporter{StateContext: operations.Import},
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "app id",
