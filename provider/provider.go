@@ -13,7 +13,6 @@ import (
 	"terraform-provider-eas/provider/apple/certificate"
 	"terraform-provider-eas/provider/apple/provisioningprofile"
 	"terraform-provider-eas/provider/apple/pushkey"
-	"terraform-provider-eas/provider/apple/team"
 	"terraform-provider-eas/provider/appvariable"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -37,25 +36,18 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"eas_app":                        app.DataSource(),
-			"eas_app_variable":               appvariable.DataSource(),
-			"eas_apple_team":                 team.DataSource(),
 			"eas_app_store_api_key":          appstoreapikey.DataSource(),
 			"eas_apple_certificate":          certificate.DataSource(),
-			"eas_provisioning_profile":       provisioningprofile.DataSource(),
-			"eas_apple_app_identifier":       appidentifier.DataSource(),
-			"eas_app_credentials":            appleappcredentials.DataSource(),
 			"eas_apple_push_key":             pushkey.DataSource(),
 			"eas_google_service_account_key": googleserviceaccountkey.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			"eas_android_app_credentials": androidappcredentials.Resource(),
 			"eas_app":                     app.Resource(),
 			"eas_app_variable":            appvariable.Resource(),
-			"eas_apple_team":              team.Resource(),
 			"eas_provisioning_profile":    provisioningprofile.Resource(),
 			"eas_apple_app_identifier":    appidentifier.Resource(),
-			"eas_app_credentials":         appleappcredentials.Resource(),
-			"eas_android_app_credentials": androidappcredentials.Resource(),
+			"eas_apple_app_credentials":   appleappcredentials.Resource(),
 		},
 		ConfigureContextFunc: func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 			token := d.Get("token").(string)
