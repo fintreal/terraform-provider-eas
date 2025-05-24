@@ -1,6 +1,7 @@
 package appcredentials
 
 import (
+	"strings"
 	"terraform-provider-eas/provider/android/appcredentials/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -40,7 +41,14 @@ func Resource() *schema.Resource {
 				Description: "FCM Google Service Account Key Id",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				ForceNew:    true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					// Normalize whitespace by removing all whitespace and comparing
+					oldNormalized := strings.Join(strings.Fields(old), "")
+					newNormalized := strings.Join(strings.Fields(new), "")
+					return oldNormalized == newNormalized
+				},
 			},
 			"build_credentials": {
 				Description: "EAS Android Build Credentials",
