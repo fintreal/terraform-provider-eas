@@ -7,12 +7,14 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  TF_VAR_APP_STORE_API_KEY_IDENTIFIER: ${{ secrets.APP_STORE_API_KEY_IDENTIFIER }}
-  TF_VAR_APPLE_CERTIFICATE_SERIAL_NUMBER: ${{ secrets.APPLE_CERTIFICATE_SERIAL_NUMBER }}
-  TF_VAR_APPLE_PUSH_KEY_IDENTIFIER: ${{ secrets.APPLE_PUSH_KEY_IDENTIFIER }}
-  TF_VAR_GOOGLE_SERVICE_ACCOUNT_KEY_PROJECT_IDENTIFIER: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_PROJECT_IDENTIFIER }}
-  TF_VAR_PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
-  TF_VAR_FCM_KEY: ${{ secrets.FCM_KEY }}
+  EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+  EXPO_ACCOUNT_NAME: ${{ secrets.EXPO_ACCOUNT_NAME }}
+  TF_VAR_APP_STORE_API_KEY_IDENTIFIER: ${{ secrets.TF_VAR_APP_STORE_API_KEY_IDENTIFIER }}
+  TF_VAR_APPLE_CERTIFICATE_SERIAL_NUMBER: ${{ secrets.TF_VAR_APPLE_CERTIFICATE_SERIAL_NUMBER }}
+  TF_VAR_APPLE_PUSH_KEY_IDENTIFIER: ${{ secrets.TF_VAR_APPLE_PUSH_KEY_IDENTIFIER }}
+  TF_VAR_GOOGLE_SERVICE_ACCOUNT_KEY_PROJECT_IDENTIFIER: ${{ secrets.TF_VAR_GOOGLE_SERVICE_ACCOUNT_KEY_PROJECT_IDENTIFIER }}
+  TF_VAR_PROVISIONING_PROFILE_BASE64: ${{ secrets.TF_VAR_PROVISIONING_PROFILE_BASE64 }}
+  TF_VAR_FCM_KEY: ${{ secrets.TF_VAR_FCM_KEY }}
 
 jobs:
   Test:
@@ -23,9 +25,16 @@ jobs:
 
       - name: Setup Go
         uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.0'
 
       - name: Install provider
         run: go install .
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.0
 
       - name: Setup Terraformrc
         run: |
@@ -38,14 +47,11 @@ jobs:
           }
           EOF
 
-      - name: Terraform init
-        working-directory: .github/test
-        run: terraform init
-
       - name: Terraform Apply
         working-directory: .github/test
         run: terraform apply -auto-approve
 
       - name: Terraform Destroy
+        if: always()
         working-directory: .github/test
         run: terraform destroy -auto-approve
