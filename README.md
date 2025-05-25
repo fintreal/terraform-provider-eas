@@ -1,58 +1,10 @@
 ## Expo Application Services Terraform Provider
 
-- Manage Expo EAS app and environment variables with `terraform`
+- Manage Expo EAS app, credentials and environment variables with `terraform`
 - Uses Expo EAS GraphQL API
 
-### Provider
-```hcl
-terraform {
-  required_providers {
-    eas = {
-      source  = "fintreal/eas"
-    }
-  }
-}
+For detailed examples of available resources and data sources, please refer to the [examples directory](./examples):
 
-provider "eas" {
-  token       = "EXPO_TOKEN"
-  account_name = "EXPO_ACCOUNT_NAME"
-}
-```
-
-### Resources
-
-##### app
-```hcl
-resource "eas_app" "eas_app" {
-    name = "My App Name"
-    slug = "my-app-slug"
-}
-```
-
-##### app_variable
-```hcl
-resource "eas_app_variable" "app_variable" {
-    app_id = "953ed82f-4ac7-47be-ab46-d9c7a1169fe6"
-    name = "API_KEY"
-    value  = "my-api-key"
-    visibility = "PUBLIC"
-    environments = ["DEVELOPMENT"]
-}
-```
-
-### Data Sources
-
-##### app
-```hcl
-data "eas_app" "eas_app" {
-    id = "953ed82f-4ac7-47be-ab46-d9c7a1169fe6"
-}
-```
-
-##### app_variable
-```hcl
-data "eas_app_variable" "eas_app_variable" {
-  name = "API_URL"
-  app_id = "953ed82f-4ac7-47be-ab46-d9c7a1169fe6"
-}
-```
+- [Resource Examples](./examples/resources) - Examples for managing EAS apps and variables
+- [Data Source Examples](./examples/data-sources) - Examples for querying EAS apps and variables
+- [Provider Configuration Examples](./examples/provider) - Additional provider configuration examples
