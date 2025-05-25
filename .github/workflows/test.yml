@@ -1,0 +1,51 @@
+name: Test Provider
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  TF_VAR_APP_STORE_API_KEY_IDENTIFIER: ${{ secrets.APP_STORE_API_KEY_IDENTIFIER }}
+  TF_VAR_APPLE_CERTIFICATE_SERIAL_NUMBER: ${{ secrets.APPLE_CERTIFICATE_SERIAL_NUMBER }}
+  TF_VAR_APPLE_PUSH_KEY_IDENTIFIER: ${{ secrets.APPLE_PUSH_KEY_IDENTIFIER }}
+  TF_VAR_GOOGLE_SERVICE_ACCOUNT_KEY_PROJECT_IDENTIFIER: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_PROJECT_IDENTIFIER }}
+  TF_VAR_PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+  TF_VAR_FCM_KEY: ${{ secrets.FCM_KEY }}
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+
+      - name: Install provider
+        run: go install .
+
+      - name: Setup Terraformrc
+        run: |
+          mkdir -p ~/.terraform.d/plugins
+          cat > ~/.terraformrc << 'EOF'
+          provider_installation {
+            dev_overrides {
+              "fintreal/eas" = "/home/runner/go/bin"
+            }
+          }
+          EOF
+
+      - name: Terraform init
+        working-directory: .github/test
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: .github/test
+        run: terraform apply -auto-approve
+
+      - name: Terraform Destroy
+        working-directory: .github/test
+        run: terraform destroy -auto-approve
