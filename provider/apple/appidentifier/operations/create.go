@@ -13,6 +13,23 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	client := m.(*client.EASClient)
 
 	identifier := d.Get("identifier").(string)
+
+	getInput := eas.GetByIdentifierAppleAppIdentifierData{
+		AccountId:  client.AccountId,
+		Identifier: d.Get("identifier").(string),
+	}
+	getData, err := client.Apple.AppIdentifier.GetByIdentifier(getInput)
+
+	if err == nil {
+		d.SetId(getData.Id)
+		d.Set("id", getData.Id)
+		d.Set("identifier", getData.Identifier)
+		return diag.Diagnostics{diag.Diagnostic{
+			Severity: diag.Warning,
+			Summary:  "App Identifier " + identifier + " already exists. Importing it into the state!",
+		}}
+	}
+
 	input := eas.CreateAppleAppIdentifierData{
 		AccountId:  client.AccountId,
 		Identifier: identifier,

@@ -15,6 +15,21 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	name := d.Get("name").(string)
 	slug := d.Get("slug").(string)
 
+	fullName := "@" + client.AccountName + "/" + slug
+
+	getApp, err := client.App.GetByFullName(fullName)
+	if err == nil {
+		d.SetId(getApp.Id)
+		d.Set("id", getApp.Id)
+		d.Set("name", getApp.Name)
+		d.Set("slug", getApp.Slug)
+
+		return diag.Diagnostics{diag.Diagnostic{
+			Severity: diag.Warning,
+			Summary:  "App " + fullName + " already exists. Importing it into the state!",
+		}}
+	}
+
 	input := eas.CreateAppData{
 		Name:      name,
 		Slug:      slug,

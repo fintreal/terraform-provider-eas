@@ -15,7 +15,7 @@ func Import(ctx context.Context, d *schema.ResourceData, m any) ([]*schema.Resou
 		return nil, err
 	}
 
-	if err := d.Set("name", data.Id); err != nil {
+	if err := d.Set("id", data.Id); err != nil {
 		return nil, err
 	}
 	if err := d.Set("name", data.Name); err != nil {

@@ -14,7 +14,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	var warning = diag.Diagnostic{
 		Severity: diag.Warning,
 		Summary:  "App was removed from the state but not deleted!",
-		Detail:   fmt.Sprintf("EAS requires elevated privilages to delete app. The app was removed from the state, but you have to delete it manually here https://expo.dev/accounts/%s/projects", client.AccountName),
+		Detail:   fmt.Sprintf("EAS requires elevated privilages to delete app. The app was removed from the state, but you have to delete it manually here https://expo.dev/accounts/%s/projects. \n When you try to recreate the app, it will be imported into the state.", client.AccountName),
 	}
 	return diag.Diagnostics{warning}
 }
