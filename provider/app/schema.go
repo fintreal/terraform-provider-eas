@@ -8,29 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func DataSource() *schema.Resource {
-	return &schema.Resource{
-		ReadContext: operations.Read,
-		Schema: map[string]*schema.Schema{
-			"id": {
-				Description: "app id",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"name": {
-				Description: "display name",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"slug": {
-				Description: "app slug",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-		},
-	}
-}
-
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: operations.Create,

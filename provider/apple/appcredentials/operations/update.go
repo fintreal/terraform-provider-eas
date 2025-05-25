@@ -18,45 +18,6 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	return diags
 }
 
-// func handleCredentialsChange(d *schema.ResourceData, client *client.EASClient) diag.Diagnostics {
-// 	var diags diag.Diagnostics
-
-// 	if !d.HasChange("app_store_api_key_id") && !d.HasChange("push_key_id") {
-// 		return diags
-// 	}
-
-// 	input := eas.UpdateAppCredentialsData{
-// 		Id: d.Get("id").(string),
-// 	}
-
-// 	appStoreApiKeyId := d.Get("app_store_api_key_id").(string)
-// 	if appStoreApiKeyId != "" {
-// 		input.AppStoreApiKeyId = &appStoreApiKeyId
-// 	}
-// 	pushKeyId := d.Get("push_key_id").(string)
-// 	if pushKeyId != "" {
-// 		input.PushKeyId = &pushKeyId
-// 	}
-
-// 	diags = append(diags, diag.Errorf("%+v\n", input)...)
-
-// 	data, err := client.Apple.AppCredentials.Update(input)
-// 	diags = append(diags, diag.Errorf("%+v\n", *data.AppStoreApiKeyId)...)
-
-// 	if err != nil {
-// 		return diag.FromErr(err)
-// 	}
-
-// 	d.SetId(data.Id)
-// 	d.Set("id", data.Id)
-// 	d.Set("app_id", data.AppId)
-// 	d.Set("app_identifier_id", data.AppIdentifierId)
-// 	d.Set("app_store_api_key_id", data.AppStoreApiKeyId)
-// 	d.Set("push_key_id", data.PushKeyId)
-
-// 	return diags
-// }
-
 func handleAppStoreChange(d *schema.ResourceData, client *client.EASClient) diag.Diagnostics {
 	var diags diag.Diagnostics
 	if !d.HasChange("app_store") {

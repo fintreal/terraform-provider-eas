@@ -13,15 +13,7 @@ description: |-
 ## Example Usage
 
 ```terraform
-terraform {
-  required_providers {
-    eas = {
-      source  = "fintreal/eas"
-    }
-  }
-}
-
-resource "eas_app" "app" {
+resource "eas_app" "eas_app" {
   name = "My App Name"
   slug = "my-app-slug"
 }

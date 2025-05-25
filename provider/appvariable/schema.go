@@ -7,45 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func DataSource() *schema.Resource {
-	return &schema.Resource{
-		ReadContext: operations.Read,
-		Schema: map[string]*schema.Schema{
-			"app_id": {
-				Description: "app id",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"name": {
-				Description: "environment variable name",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"id": {
-				Description: "environment variable id",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"value": {
-				Description: "environment variable value",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"visibility": {
-				Description: "visibility: PUBLIC, SENSITIVE, SECRET",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"environments": {
-				Description: "environments: DEVELOPMENT, PREVIEW, PRODUCTION",
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Computed:    true,
-			},
-		},
-	}
-}
-
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		ReadContext:   operations.Read,

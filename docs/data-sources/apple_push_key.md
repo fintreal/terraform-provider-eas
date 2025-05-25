@@ -13,23 +13,8 @@ description: |-
 ## Example Usage
 
 ```terraform
-terraform {
-  required_providers {
-    eas = {
-      source  = "fintreal/eas"
-      version = "~> 1.4"
-    }
-  }
-}
-
-provider "eas" {}
-
-data "eas_apple_push_key" "this" {
-  identifier = "M6SPYT2C2L"
-}
-
-output "name" {
-  value = data.eas_apple_push_key.this
+data "eas_apple_push_key" "eas_apple_push_key" {
+  identifier = "PUSH_KEY_IDENTIFIER"
 }
 ```
 
