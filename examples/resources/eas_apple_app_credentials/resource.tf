@@ -1,31 +1,31 @@
-data "eas_app_store_api_key" "eas_app_store_api_key" {
+data "eas_app_store_api_key" "this" {
   identifier = "APP_STORE_API_KEY_IDENTIFIER"
 }
 
-data "eas_apple_certificate" "eas_apple_certificate" {
-  serial_number = "APPLE_CERTIFICATE_SERIAL_NUMBER"
+data "eas_ios_certificate" "this" {
+  serial_number = "IOS_CERTIFICATE_SERIAL_NUMBER"
 }
 
-resource "eas_app" "eas_app" {
+resource "eas_app" "this" {
   name = "My App Name"
   slug = "my-app-slug"
 }
 
-resource "eas_apple_app_identifier" "eas_apple_app_identifier" {
+resource "eas_ios_app_identifier" "this" {
   identifier = "my.app.identifier"
 }
 
-resource "eas_provisioning_profile" "provisioning_profile" {
-  app_identifier_id = eas_apple_app_identifier.eas_apple_app_identifier.id
+resource "eas_provisioning_profile" "this" {
+  app_identifier_id = eas_ios_app_identifier.this.id
   base64            = "BASE64_ENCODED_PROVISIONING_PROFILE"
 }
 
-resource "eas_apple_app_credentials" "eas_apple_app_credentials" {
+resource "eas_ios_app_credentials" "this" {
   app_id               = eas_app.eas_app.id
-  app_identifier_id    = eas_apple_app_identifier.eas_apple_app_identifier.id
-  app_store_api_key_id = data.eas_app_store_api_key.eas_app_store_api_key.id
+  app_identifier_id    = eas_ios_app_identifier.this.id
+  app_store_api_key_id = data.eas_app_store_api_key.this.id
   app_store {
-    provisioning_profile_id = eas_provisioning_profile.provisioning_profile.id
-    certificate_id          = data.eas_apple_certificate.eas_apple_certificate.id
+    provisioning_profile_id = eas_provisioning_profile.this.id
+    certificate_id          = data.eas_ios_certificate.this.id
   }
 }

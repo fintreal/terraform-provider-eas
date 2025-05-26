@@ -1,7 +1,7 @@
 package appidentifier
 
 import (
-	"terraform-provider-eas/provider/apple/appidentifier/operations"
+	"terraform-provider-eas/provider/ios/appidentifier/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

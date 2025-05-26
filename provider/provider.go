@@ -7,13 +7,13 @@ import (
 	androidappcredentials "terraform-provider-eas/provider/android/appcredentials"
 	"terraform-provider-eas/provider/android/googleserviceaccountkey"
 	"terraform-provider-eas/provider/app"
-	appleappcredentials "terraform-provider-eas/provider/apple/appcredentials"
-	"terraform-provider-eas/provider/apple/appidentifier"
-	"terraform-provider-eas/provider/apple/appstoreapikey"
-	"terraform-provider-eas/provider/apple/certificate"
-	"terraform-provider-eas/provider/apple/provisioningprofile"
-	"terraform-provider-eas/provider/apple/pushkey"
 	"terraform-provider-eas/provider/appvariable"
+	iosappcredentials "terraform-provider-eas/provider/ios/appcredentials"
+	"terraform-provider-eas/provider/ios/appidentifier"
+	"terraform-provider-eas/provider/ios/appstoreapikey"
+	"terraform-provider-eas/provider/ios/certificate"
+	"terraform-provider-eas/provider/ios/provisioningprofile"
+	"terraform-provider-eas/provider/ios/pushkey"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -37,17 +37,17 @@ func Provider() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"eas_app_store_api_key":          appstoreapikey.DataSource(),
-			"eas_apple_certificate":          certificate.DataSource(),
-			"eas_apple_push_key":             pushkey.DataSource(),
+			"eas_ios_certificate":            certificate.DataSource(),
+			"eas_ios_push_key":               pushkey.DataSource(),
 			"eas_google_service_account_key": googleserviceaccountkey.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"eas_android_app_credentials": androidappcredentials.Resource(),
-			"eas_app":                     app.Resource(),
-			"eas_app_variable":            appvariable.Resource(),
-			"eas_provisioning_profile":    provisioningprofile.Resource(),
-			"eas_apple_app_identifier":    appidentifier.Resource(),
-			"eas_apple_app_credentials":   appleappcredentials.Resource(),
+			"eas_android_app_credentials":      androidappcredentials.Resource(),
+			"eas_app":                          app.Resource(),
+			"eas_app_variable":                 appvariable.Resource(),
+			"eas_ios_app_provisioning_profile": provisioningprofile.Resource(),
+			"eas_ios_app_identifier":           appidentifier.Resource(),
+			"eas_ios_app_credentials":          iosappcredentials.Resource(),
 		},
 		ConfigureContextFunc: func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 			token := d.Get("token").(string)

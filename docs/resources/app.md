@@ -13,7 +13,7 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "eas_app" "eas_app" {
+resource "eas_app" "this" {
   name = "My App Name"
   slug = "my-app-slug"
 }

@@ -2,11 +2,11 @@ variable "APP_STORE_API_KEY_IDENTIFIER" {
   type = string
 }
 
-variable "APPLE_CERTIFICATE_SERIAL_NUMBER" {
+variable "IOS_CERTIFICATE_SERIAL_NUMBER" {
   type = string
 }
 
-variable "APPLE_PUSH_KEY_IDENTIFIER" {
+variable "IOS_PUSH_KEY_IDENTIFIER" {
   type = string
 }
 
