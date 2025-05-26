@@ -1,7 +1,7 @@
 package pushkey
 
 import (
-	"terraform-provider-eas/provider/apple/pushkey/operations"
+	"terraform-provider-eas/provider/ios/pushkey/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

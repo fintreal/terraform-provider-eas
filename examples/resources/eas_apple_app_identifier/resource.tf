@@ -1,3 +1,3 @@
-resource "eas_apple_app_identifier" "eas_apple_app_identifier" {
+resource "eas_ios_app_identifier" "this" {
   identifier = "my.app.identifier"
 }

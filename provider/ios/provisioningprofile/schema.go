@@ -1,7 +1,7 @@
 package provisioningprofile
 
 import (
-	"terraform-provider-eas/provider/apple/provisioningprofile/operations"
+	"terraform-provider-eas/provider/ios/provisioningprofile/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

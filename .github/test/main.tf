@@ -21,23 +21,23 @@ resource "eas_app_variable" "this" {
   environments = ["DEVELOPMENT"]
 }
 
-resource "eas_apple_app_identifier" "this" {
+resource "eas_ios_app_identifier" "this" {
   identifier = local.bundle_identifier
 }
 
-resource "eas_provisioning_profile" "this" {
-  app_identifier_id = eas_apple_app_identifier.this.id
+resource "eas_ios_app_provisioning_profile" "this" {
+  app_identifier_id = eas_ios_app_identifier.this.id
   base64            = var.PROVISIONING_PROFILE_BASE64
 }
 
-resource "eas_apple_app_credentials" "this" {
+resource "eas_ios_app_credentials" "this" {
   app_id               = eas_app.this.id
-  app_identifier_id    = eas_apple_app_identifier.this.id
+  app_identifier_id    = eas_ios_app_identifier.this.id
   app_store_api_key_id = data.eas_app_store_api_key.this.id
-  push_key_id          = data.eas_apple_push_key.this.id
+  push_key_id          = data.eas_ios_push_key.this.id
   app_store {
-    provisioning_profile_id = eas_provisioning_profile.this.id
-    certificate_id          = data.eas_apple_certificate.this.id
+    provisioning_profile_id = eas_ios_app_provisioning_profile.this.id
+    certificate_id          = data.eas_ios_certificate.this.id
   }
 }
 

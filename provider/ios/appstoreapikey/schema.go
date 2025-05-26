@@ -1,7 +1,7 @@
 package appstoreapikey
 
 import (
-	"terraform-provider-eas/provider/apple/appstoreapikey/operations"
+	"terraform-provider-eas/provider/ios/appstoreapikey/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
