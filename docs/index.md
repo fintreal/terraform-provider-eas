@@ -22,8 +22,8 @@ terraform {
 }
 
 provider "eas" {
-  token        = "EXPO_TOKEN"
-  account_name = "EXPO_ACCOUNT_NAME"
+  token        = "..."
+  account_name = "..."
 }
 ```
 

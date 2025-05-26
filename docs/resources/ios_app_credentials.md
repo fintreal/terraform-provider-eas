@@ -14,11 +14,11 @@ description: |-
 
 ```terraform
 data "eas_app_store_api_key" "this" {
-  identifier = "APP_STORE_API_KEY_IDENTIFIER"
+  identifier = "..."
 }
 
 data "eas_ios_certificate" "this" {
-  serial_number = "IOS_CERTIFICATE_SERIAL_NUMBER"
+  serial_number = "..."
 }
 
 resource "eas_app" "this" {
@@ -32,7 +32,7 @@ resource "eas_ios_app_identifier" "this" {
 
 resource "eas_provisioning_profile" "this" {
   app_identifier_id = eas_ios_app_identifier.this.id
-  base64            = "BASE64_ENCODED_PROVISIONING_PROFILE"
+  base64            = "..."
 }
 
 resource "eas_ios_app_credentials" "this" {
