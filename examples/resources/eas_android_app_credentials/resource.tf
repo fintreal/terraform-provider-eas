@@ -10,7 +10,7 @@ data "eas_google_service_account_key" "this" {
 resource "eas_android_app_credentials" "this" {
   app_id                        = eas_app.this.id
   identifier                    = "com.example.myapp"
-  google_service_account_key_id = "..."
+  google_service_account_key_id = data.eas_google_service_account_key.this.id
   fcm_key                       = "..."
   build_credentials {
     name        = "Default"

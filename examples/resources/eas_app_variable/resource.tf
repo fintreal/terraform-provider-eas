@@ -6,7 +6,7 @@ resource "eas_app" "this" {
 resource "eas_app_variable" "this" {
   app_id       = eas_app.this.id
   name         = "API_URL"
-  value        = "my-api-url"
+  value        = "http://example.com/api"
   visibility   = "PUBLIC"
   environments = ["DEVELOPMENT"]
 }
