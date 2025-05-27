@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     eas = {
-      source = "registry.terraform.io/fintreal/eas"
+      source = "fintreal/eas"
     }
   }
 }

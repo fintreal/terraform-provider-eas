@@ -4,5 +4,5 @@ resource "eas_ios_app_identifier" "this" {
 
 resource "eas_ios_app_provisioning_profile" "this" {
   app_identifier_id = eas_ios_app_identifier.this.id
-  base64            = "BASE64_ENCODED_PROVISIONING_PROFILE"
+  base64            = "..."
 }
