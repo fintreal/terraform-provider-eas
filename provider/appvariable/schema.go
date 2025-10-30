@@ -1,6 +1,7 @@
 package appvariable
 
 import (
+	"strings"
 	"terraform-provider-eas/provider/appvariable/operations"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -45,7 +46,10 @@ func Resource() *schema.Resource {
 				Type:        schema.TypeSet,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
-					ValidateFunc: validation.StringInSlice([]string{"DEVELOPMENT", "PREVIEW", "PRODUCTION"}, false),
+					ValidateFunc: validation.StringInSlice([]string{"development", "preview", "production"}, true),
+					StateFunc: func(val any) string {
+						return strings.ToLower(val.(string))
+					},
 				},
 				Required: true,
 			},

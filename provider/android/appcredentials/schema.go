@@ -1,6 +1,7 @@
 package appcredentials
 
 import (
+	"encoding/json"
 	"strings"
 	"terraform-provider-eas/provider/android/appcredentials/operations"
 
@@ -44,7 +45,23 @@ func Resource() *schema.Resource {
 				Sensitive:   true,
 				ForceNew:    true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					// Normalize whitespace by removing all whitespace and comparing
+					// If both are empty, they're equal
+					if strings.TrimSpace(old) == "" && strings.TrimSpace(new) == "" {
+						return true
+					}
+
+					// Try to parse as JSON and compare the normalized form
+					var oldJSON, newJSON interface{}
+					if err := json.Unmarshal([]byte(old), &oldJSON); err == nil {
+						if err := json.Unmarshal([]byte(new), &newJSON); err == nil {
+							// Re-marshal both to get normalized JSON
+							oldNorm, _ := json.Marshal(oldJSON)
+							newNorm, _ := json.Marshal(newJSON)
+							return string(oldNorm) == string(newNorm)
+						}
+					}
+
+					// Fallback: normalize whitespace by removing all whitespace and comparing
 					oldNormalized := strings.Join(strings.Fields(old), "")
 					newNormalized := strings.Join(strings.Fields(new), "")
 					return oldNormalized == newNormalized
