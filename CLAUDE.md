@@ -53,7 +53,7 @@ Set `GOPRIVATE=github.com/fintreal/*` for private module access.
 ## CI/CD
 
 - **PR / nightly**: Runs `terraform apply` + `terraform destroy` against `.github/test/` configs (test.yml)
-- **Push to main**: Auto-generates docs via `tfplugindocs`, creates semver release, builds with GoReleaser (release.yml)
+- **Push to main**: Verify gate (`go build`/`go vet`/`gofmt`) → auto-generates docs via pinned `tfplugindocs` → creates semver release → builds with GoReleaser (release.yml)
 - Docs in `docs/` are auto-generated -- do not edit manually
 
 ## Auth
