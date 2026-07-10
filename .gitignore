@@ -38,3 +38,6 @@ website/vendor
 
 *.terraform
 .terraform.lock.hcl
+
+# Claude Code local instructions (not published)
+CLAUDE.md
