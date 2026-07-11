@@ -76,6 +76,7 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
+          noVersionBumpBehavior: patch
 
       - name: Create release
         uses: ncipollo/release-action@v1.16.0
