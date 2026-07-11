@@ -1,10 +1,13 @@
-name: Test Provider
+name: Nightly
+
+# Scheduled canary run of the same integration test as test.yml. Kept in a
+# separate file (no pull_request trigger) so that GitHub's inactivity
+# auto-disable of scheduled workflows can never take the PR checks down with it.
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: '0 2 * * *'
 
 env:
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
