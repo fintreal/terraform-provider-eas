@@ -6,7 +6,7 @@ terraform {
   }
 }
 
-provider "eas" { }
+provider "eas" {}
 
 resource "eas_app" "this" {
   name = "Terraform Provider EAS"
@@ -17,6 +17,13 @@ resource "eas_app_variable" "this" {
   app_id       = eas_app.this.id
   name         = "API_KEY"
   value        = "my-api-key"
+  visibility   = "PUBLIC"
+  environments = ["DEVELOPMENT"]
+}
+
+resource "eas_account_variable" "this" {
+  name         = "ACCOUNT_API_KEY"
+  value        = "my-account-api-key"
   visibility   = "PUBLIC"
   environments = ["DEVELOPMENT"]
 }

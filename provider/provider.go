@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"terraform-provider-eas/internal/client"
+	"terraform-provider-eas/provider/accountvariable"
 	androidappcredentials "terraform-provider-eas/provider/android/appcredentials"
 	"terraform-provider-eas/provider/android/googleserviceaccountkey"
 	"terraform-provider-eas/provider/app"
@@ -45,6 +46,7 @@ func Provider() *schema.Provider {
 			"eas_android_app_credentials":      androidappcredentials.Resource(),
 			"eas_app":                          app.Resource(),
 			"eas_app_variable":                 appvariable.Resource(),
+			"eas_account_variable":             accountvariable.Resource(),
 			"eas_ios_app_provisioning_profile": provisioningprofile.Resource(),
 			"eas_ios_app_identifier":           appidentifier.Resource(),
 			"eas_ios_app_credentials":          iosappcredentials.Resource(),
