@@ -3,7 +3,7 @@ module terraform-provider-eas
 go 1.25.8
 
 require (
-	github.com/fintreal/eas-sdk-go v1.30.5
+	github.com/fintreal/eas-sdk-go v1.30.6
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.1
 )
 
