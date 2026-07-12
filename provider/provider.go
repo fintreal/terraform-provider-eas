@@ -57,6 +57,15 @@ func Provider() *schema.Provider {
 
 			var diags diag.Diagnostics
 
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Warning,
+				Summary:  "The fintreal/eas provider is deprecated and has moved to elevenode/expo",
+				Detail: "fintreal/eas is no longer maintained. Migrate to the elevenode/expo provider:\n\n" +
+					"  terraform {\n    required_providers {\n      expo = {\n        source  = \"elevenode/expo\"\n        version = \"~> 1.0\"\n      }\n    }\n  }\n\n" +
+					"Resource and data source types were renamed from eas_* to expo_*.\n" +
+					"Migration guide: https://github.com/elevenode/terraform-provider-expo",
+			})
+
 			if token == "" {
 				diags = append(diags, diag.Diagnostic{
 					Severity: diag.Error,
@@ -73,7 +82,7 @@ func Provider() *schema.Provider {
 				})
 			}
 
-			if len(diags) > 0 {
+			if diags.HasError() {
 				return nil, diags
 			}
 

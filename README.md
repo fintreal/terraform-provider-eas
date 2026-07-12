@@ -1,3 +1,10 @@
+> [!WARNING]
+> ## ⚠️ Deprecated — this provider has moved
+>
+> **`fintreal/eas` is deprecated and no longer maintained.** It now lives at **[`elevenode/expo`](https://registry.terraform.io/providers/elevenode/expo/latest)** ([source](https://github.com/elevenode/terraform-provider-expo)).
+>
+> To migrate, set the provider `source` to `elevenode/expo`. Note that resource and data source types were renamed from `eas_*` to `expo_*`.
+
 ## Expo Application Services Terraform Provider
 
 - Manage Expo EAS app, credentials and environment variables with `terraform`
